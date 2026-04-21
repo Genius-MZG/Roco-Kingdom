@@ -1,0 +1,2236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>洛克王国异色精灵保底进度管理</title>
+  <style>
+    :root {
+      --page-bg: #0b1220;
+      --text: #142033;
+      --muted: #667085;
+      --subtle: #94a3b8;
+      --cream: #f8efe0;
+      --surface: rgba(255, 255, 255, .78);
+      --surface-strong: rgba(255, 255, 255, .92);
+      --surface-soft: rgba(255, 255, 255, .58);
+      --surface-dark: rgba(10, 18, 34, .72);
+      --line: rgba(148, 163, 184, .26);
+      --line-strong: rgba(255, 255, 255, .46);
+      --primary: #27b89b;
+      --primary-2: #4bc2ff;
+      --blue: #6eadff;
+      --danger: #e94f64;
+      --danger-soft: rgba(255, 228, 230, .78);
+      --warning: #f59e0b;
+      --success: #20b878;
+      --shadow: 0 30px 90px rgba(15, 23, 42, .18);
+      --shadow-soft: 0 16px 46px rgba(15, 23, 42, .12);
+      --shadow-tiny: 0 10px 26px rgba(15, 23, 42, .08);
+      --radius-xxl: 34px;
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --container: min(1440px, calc(100vw - 40px));
+      --ease: cubic-bezier(.2, .8, .2, 1);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --seasonal-background-image: url("pic/background.jpg");
+      --page-bg-height: 100vh;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+      color: var(--text);
+      background: var(--page-bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background: #0b1220;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body.is-auth::before {
+      position: fixed;
+      inset: 0;
+      background-image: url("pic/login.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.08) contrast(1.02);
+      transform: translateZ(0);
+    }
+
+    body.is-auth::after {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(75, 194, 255, .26), transparent 34%),
+        radial-gradient(circle at 82% 76%, rgba(39, 184, 155, .24), transparent 36%),
+        linear-gradient(135deg, rgba(6, 12, 26, .72), rgba(8, 18, 34, .42) 48%, rgba(4, 10, 21, .76));
+    }
+
+    body.is-app::before {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: var(--page-bg-height);
+      min-height: 100vh;
+      background-image: var(--seasonal-background-image), url("pic/background.jpg");
+      background-repeat: no-repeat, no-repeat;
+      background-size: auto 100%, auto 100%;
+      background-position: right top, right top;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    body.is-app::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: var(--page-bg-height);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 52% 8%, rgba(255, 255, 255, .40), rgba(255, 255, 255, .12) 32%, transparent 58%),
+        radial-gradient(ellipse at 50% 46%, rgba(255, 255, 255, .36), transparent 52%),
+        linear-gradient(90deg, rgba(7, 12, 24, .58), rgba(255, 255, 255, .08) 26%, rgba(255, 255, 255, .18) 58%, rgba(8, 14, 27, .20) 100%),
+        linear-gradient(180deg, rgba(8, 13, 26, .58) 0%, rgba(12, 18, 32, .24) 16%, rgba(237, 245, 250, .56) 58%, rgba(238, 246, 251, .84) 100%);
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    button:disabled, input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; opacity: .58; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    .is-hidden { display: none !important; }
+
+    .screen {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      padding: max(18px, var(--safe-top)) 20px calc(24px + var(--safe-bottom));
+    }
+
+    .glass,
+    .auth-hero,
+    .auth-card,
+    .topbar,
+    .panel,
+    .world-card,
+    .pet-card,
+    .record-form,
+    .record-card,
+    .season-body,
+    .site-footer {
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(22px) saturate(1.12);
+      -webkit-backdrop-filter: blur(22px) saturate(1.12);
+    }
+
+    .auth-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .auth-layout {
+      width: min(1080px, 100%);
+      margin: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, .82fr);
+      gap: clamp(16px, 3vw, 28px);
+      align-items: stretch;
+    }
+
+    .auth-hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+      border-radius: var(--radius-xxl);
+      padding: clamp(30px, 5vw, 58px);
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(7, 11, 24, .84), rgba(10, 25, 42, .52) 56%, rgba(9, 18, 33, .82));
+      isolation: isolate;
+    }
+
+    .auth-hero::before,
+    .auth-hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .auth-hero::before {
+      right: -130px;
+      top: -120px;
+      width: 390px;
+      height: 390px;
+      background: radial-gradient(circle, rgba(75, 194, 255, .46), transparent 66%);
+    }
+
+    .auth-hero::after {
+      left: -190px;
+      bottom: -190px;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, rgba(39, 184, 155, .34), transparent 68%);
+    }
+
+    .brand-mark,
+    .mini-logo {
+      display: grid;
+      place-items: center;
+      color: #0d1828;
+      font-weight: 950;
+      background: linear-gradient(135deg, #fff7df 0%, #83e7ff 47%, #88a3ff 100%);
+      box-shadow: 0 20px 48px rgba(75, 194, 255, .28);
+    }
+
+    .brand-mark {
+      width: 68px;
+      height: 68px;
+      border-radius: 23px;
+      font-size: 30px;
+    }
+
+    .brand-title {
+      max-width: 720px;
+      margin: 32px 0 18px;
+      font-size: clamp(42px, 6.7vw, 76px);
+      line-height: .98;
+      letter-spacing: -.075em;
+    }
+
+    .brand-title span {
+      color: transparent;
+      background: linear-gradient(135deg, #fff7df, #82e7ff 48%, #a6b8ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .brand-text {
+      max-width: 560px;
+      margin: 0;
+      color: rgba(248, 251, 255, .78);
+      font-size: 16px;
+      line-height: 1.85;
+    }
+
+    .auth-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: clamp(34px, 7vw, 86px);
+      max-width: 460px;
+    }
+
+    .auth-metric {
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255, 255, 255, .12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+    }
+
+    .auth-metric strong {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .auth-metric span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(248, 251, 255, .68);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .auth-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: var(--radius-xxl);
+      padding: clamp(24px, 4vw, 42px);
+      background: rgba(255, 255, 255, .82);
+    }
+
+    .auth-card h2,
+    .section-heading h2,
+    .record-area h2 {
+      margin: 0;
+      letter-spacing: -.045em;
+    }
+
+    .auth-card h2 {
+      font-size: 28px;
+    }
+
+    .auth-intro {
+      margin: 10px 0 22px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      border-radius: 16px;
+      background: rgba(226, 232, 240, .64);
+      margin-bottom: 18px;
+    }
+
+    .mode-button {
+      height: 42px;
+      border-radius: 13px;
+      color: #64748b;
+      background: transparent;
+      font-weight: 900;
+      transition: color .18s var(--ease), background .18s var(--ease), box-shadow .18s var(--ease);
+    }
+
+    .mode-button.is-active {
+      color: #0f172a;
+      background: #fff;
+      box-shadow: var(--shadow-tiny);
+    }
+
+    .field { margin-bottom: 14px; }
+
+    .field label {
+      display: block;
+      margin: 0 0 8px;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid rgba(148, 163, 184, .34);
+      border-radius: 15px;
+      padding: 0 14px;
+      color: var(--text);
+      outline: none;
+      background: rgba(255, 255, 255, .86);
+      transition: border .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 96px;
+      padding: 13px 14px;
+      line-height: 1.6;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(75, 194, 255, .72);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(75, 194, 255, .14);
+    }
+
+    .primary-button,
+    .ghost-button,
+    .action-button,
+    .danger-button,
+    .season-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      border-radius: 14px;
+      font-weight: 950;
+      transition: transform .16s var(--ease), box-shadow .16s var(--ease), background .16s var(--ease), color .16s var(--ease), border-color .16s var(--ease);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .primary-button:hover,
+    .ghost-button:hover,
+    .action-button:hover,
+    .danger-button:hover,
+    .season-toggle:hover { transform: translateY(-1px); }
+
+    .primary-button {
+      width: 100%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 16px 36px rgba(39, 184, 155, .24);
+    }
+
+    .ghost-button {
+      padding: 0 14px;
+      color: #475569;
+      background: rgba(255, 255, 255, .70);
+      border: 1px solid rgba(148, 163, 184, .28);
+    }
+
+    .danger-button {
+      padding: 0 12px;
+      color: #b42318;
+      background: var(--danger-soft);
+      border: 1px solid rgba(251, 113, 133, .26);
+    }
+
+    .status-message {
+      min-height: 22px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status-message.error { color: #b42318; }
+    .status-message.success { color: #067a68; }
+
+    .app-screen { padding-top: max(16px, var(--safe-top)); }
+
+    .app-shell {
+      width: var(--container);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: max(12px, var(--safe-top));
+      z-index: 6;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+      border-radius: 24px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, .76);
+    }
+
+    .mini-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      font-size: 19px;
+      flex: 0 0 auto;
+    }
+
+    .topbar-title {
+      min-width: 0;
+    }
+
+    .topbar-title strong {
+      display: block;
+      font-size: 15px;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-title span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 10px;
+      scrollbar-width: none;
+    }
+
+    .nav-pills::-webkit-scrollbar { display: none; }
+
+    .nav-pills a {
+      flex: 0 0 auto;
+      padding: 9px 13px;
+      border: 1px solid rgba(255, 255, 255, .52);
+      border-radius: 999px;
+      color: #334155;
+      background: rgba(255, 255, 255, .70);
+      box-shadow: var(--shadow-tiny);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .main-banner,
+    .world-card,
+    .season-head {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .main-banner {
+      min-height: clamp(172px, 17vw, 236px);
+      border-radius: var(--radius-xxl);
+      padding: clamp(24px, 4vw, 42px);
+      color: #fff;
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(90deg, rgba(7, 12, 24, .86), rgba(8, 18, 34, .44) 52%, rgba(5, 10, 18, .50)),
+        url("pic/main.jpg");
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255, 255, 255, .30);
+    }
+
+    .main-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 22% 28%, rgba(75, 194, 255, .26), transparent 32%),
+        radial-gradient(circle at 84% 74%, rgba(248, 239, 224, .20), transparent 34%);
+    }
+
+    .banner-content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: rgba(255, 255, 255, .92);
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .22);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .main-title {
+      margin: 14px 0 0;
+      max-width: 760px;
+      font-size: clamp(34px, 5.5vw, 70px);
+      line-height: .98;
+      letter-spacing: -.07em;
+    }
+
+    .main-title span {
+      color: transparent;
+      background: linear-gradient(135deg, #fff7df, #7ee7ff 56%, #b8c6ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .banner-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(132px, 1fr));
+      gap: 10px;
+      min-width: min(360px, 100%);
+    }
+
+    .banner-metric {
+      padding: 14px;
+      border-radius: 18px;
+      color: #fff;
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .20);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+    }
+
+    .banner-metric strong {
+      display: block;
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: -.04em;
+    }
+
+    .banner-metric span {
+      display: block;
+      margin-top: 7px;
+      color: rgba(255, 255, 255, .72);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .panel {
+      border-radius: var(--radius-xl);
+      padding: clamp(18px, 3vw, 26px);
+      background: rgba(255, 255, 255, .78);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(22px, 3vw, 32px);
+      line-height: 1.15;
+    }
+
+    .section-heading p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .section-count {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #0f766e;
+      background: rgba(204, 251, 241, .62);
+      border: 1px solid rgba(45, 212, 191, .22);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .world-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      min-height: clamp(154px, 15vw, 218px);
+      border-radius: var(--radius-xl);
+      padding: clamp(22px, 4vw, 34px);
+      color: #fff;
+      background:
+        linear-gradient(90deg, rgba(7, 12, 24, .82), rgba(8, 18, 34, .48) 54%, rgba(5, 10, 18, .50)),
+        url("pic/world.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .world-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 76% 18%, rgba(75, 194, 255, .34), transparent 32%),
+        radial-gradient(circle at 18% 92%, rgba(39, 184, 155, .28), transparent 34%);
+    }
+
+    .world-card .eyebrow { color: rgba(255, 255, 255, .88); }
+
+    .world-title {
+      margin: 12px 0 0;
+      font-size: clamp(24px, 3.6vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -.055em;
+    }
+
+    .world-count {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      justify-self: end;
+    }
+
+    .world-count strong {
+      font-size: clamp(56px, 10vw, 96px);
+      line-height: .9;
+      letter-spacing: -.075em;
+    }
+
+    .world-count span {
+      color: rgba(255, 255, 255, .76);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .world-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    .world-actions .action-button {
+      min-width: 130px;
+      color: #fff;
+      background: rgba(255, 255, 255, .16);
+      border: 1px solid rgba(255, 255, 255, .22);
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .type-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 154px;
+      border-radius: 18px;
+      padding: 14px;
+      color: var(--cream);
+      border: 1px solid rgba(255, 255, 255, .26);
+      background:
+        linear-gradient(145deg, rgba(var(--type-rgb), .94), rgba(var(--type-rgb), .72)),
+        linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0));
+      box-shadow: 0 14px 34px rgba(15, 23, 42, .13);
+      isolation: isolate;
+    }
+
+    .type-card::before {
+      content: "";
+      position: absolute;
+      right: -28px;
+      top: -34px;
+      width: 92px;
+      height: 92px;
+      border: 16px solid rgba(255, 255, 255, .15);
+      border-radius: 999px;
+      z-index: -1;
+    }
+
+    .type-card::after {
+      content: "";
+      position: absolute;
+      left: -18px;
+      bottom: -20px;
+      width: 80px;
+      height: 56px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .10);
+      transform: rotate(-18deg);
+      z-index: -1;
+    }
+
+    .type-head {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .type-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      color: var(--cream);
+      text-shadow: 0 1px 10px rgba(0, 0, 0, .18);
+    }
+
+    .type-name::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(248, 239, 224, .92);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, .12);
+    }
+
+    .type-index {
+      color: rgba(248, 239, 224, .64);
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .count-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .type-card .count-row { margin-top: 18px; }
+
+    .count-number {
+      font-size: 38px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.06em;
+      color: #101827;
+    }
+
+    .type-card .count-number {
+      color: #fff;
+      text-shadow: 0 10px 26px rgba(15, 23, 42, .22);
+    }
+
+    .count-unit {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .type-card .count-unit { color: rgba(248, 239, 224, .72); }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .action-button {
+      min-height: 38px;
+      padding: 8px 10px;
+      color: #334155;
+      background: rgba(241, 245, 249, .82);
+      border: 1px solid rgba(148, 163, 184, .24);
+    }
+
+    .action-button.plus {
+      color: #067a68;
+      background: rgba(204, 251, 241, .72);
+      border-color: rgba(45, 212, 191, .28);
+    }
+
+    .action-button.minus {
+      color: #315a8a;
+      background: rgba(219, 234, 254, .72);
+      border-color: rgba(96, 165, 250, .25);
+    }
+
+    .action-button.clear {
+      color: #b42318;
+      background: var(--danger-soft);
+      border-color: rgba(251, 113, 133, .26);
+    }
+
+    .type-card .action-button {
+      color: rgba(248, 239, 224, .92);
+      background: rgba(255, 255, 255, .15);
+      border-color: rgba(255, 255, 255, .20);
+      box-shadow: none;
+    }
+
+    .type-card .action-button:hover { background: rgba(255, 255, 255, .22); }
+
+    .family-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .select-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: min(360px, 100%);
+    }
+
+    .select-inline label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .select-inline select {
+      flex: 1;
+      min-height: 42px;
+      padding: 0 12px;
+      border: 1px solid rgba(148, 163, 184, .30);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .82);
+      color: var(--text);
+      font-weight: 850;
+      outline: none;
+    }
+
+    .season-group {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .season-head {
+      width: 100%;
+      min-height: clamp(116px, 13vw, 176px);
+      padding: clamp(16px, 3vw, 24px);
+      color: #fff;
+      background:
+        linear-gradient(90deg, rgba(7, 12, 24, .84), rgba(7, 12, 24, .44) 52%, rgba(7, 12, 24, .62)),
+        var(--season-image);
+      background-size: cover;
+      background-position: center;
+      border: 1px solid rgba(255, 255, 255, .26);
+    }
+
+    .season-head-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      min-height: inherit;
+    }
+
+    .season-title {
+      margin: 9px 0 0;
+      font-size: clamp(26px, 4vw, 48px);
+      line-height: 1;
+      letter-spacing: -.055em;
+    }
+
+    .season-title span {
+      color: transparent;
+      background: linear-gradient(135deg, #fff7df, #7ee7ff 56%, #b8c6ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .season-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(92px, 1fr));
+      gap: 8px;
+      min-width: min(390px, 100%);
+    }
+
+    .season-metric {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .14);
+      border: 1px solid rgba(255, 255, 255, .18);
+    }
+
+    .season-metric strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .season-metric span {
+      display: block;
+      margin-top: 7px;
+      color: rgba(255, 255, 255, .72);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .season-toggle {
+      width: 100%;
+      min-height: 46px;
+      border-radius: 0;
+      color: #334155;
+      background: rgba(255, 255, 255, .72);
+      border-top: 1px solid rgba(148, 163, 184, .18);
+    }
+
+    .season-toggle .chevron {
+      display: inline-block;
+      transition: transform .2s var(--ease);
+    }
+
+    .season-group.is-collapsed .chevron { transform: rotate(-90deg); }
+
+    .season-body {
+      border-top: 0;
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      padding: clamp(14px, 2.5vw, 22px);
+      background: rgba(255, 255, 255, .76);
+    }
+
+    .season-group.is-collapsed .season-body { display: none; }
+
+    .pet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(218px, 1fr));
+      gap: 14px;
+    }
+
+    .pet-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      padding: 12px;
+      background: rgba(255, 255, 255, .78);
+      transition: transform .18s var(--ease), border-color .18s var(--ease), box-shadow .18s var(--ease);
+    }
+
+    .pet-card:hover { transform: translateY(-2px); }
+
+    .pet-card.has-owned {
+      border-color: rgba(75, 194, 255, .66);
+      box-shadow: 0 18px 52px rgba(75, 194, 255, .18), var(--shadow-soft);
+    }
+
+    .pet-media {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255, 255, 255, .82), transparent 28%),
+        linear-gradient(135deg, rgba(75, 194, 255, .22), rgba(39, 184, 155, .14) 45%, rgba(153, 171, 247, .20));
+      border: 1px solid rgba(255, 255, 255, .52);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55);
+    }
+
+    .pet-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 58%, rgba(9, 16, 29, .20));
+      pointer-events: none;
+    }
+
+    .pet-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.01);
+    }
+
+    .owned-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      display: none;
+      padding: 6px 9px;
+      border-radius: 999px;
+      color: #072033;
+      background: linear-gradient(135deg, #fff7df, #7ee7ff);
+      border: 1px solid rgba(255, 255, 255, .55);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, .18);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .owned-badge.is-visible { display: inline-flex; }
+
+    .pet-content { padding: 12px 4px 2px; }
+
+    .pet-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .pet-name {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+    }
+
+    .type-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 9px;
+      min-height: 28px;
+    }
+
+    .type-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: #475569;
+      background: rgba(241, 245, 249, .86);
+      border: 1px solid rgba(148, 163, 184, .22);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .record-layout {
+      display: grid;
+      grid-template-columns: minmax(320px, .9fr) minmax(0, 1.1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .record-form {
+      border-radius: var(--radius-xl);
+      padding: clamp(18px, 3vw, 24px);
+      background: rgba(255, 255, 255, .80);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-grid .field.full { grid-column: 1 / -1; }
+
+    .record-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .record-card {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border-radius: 22px;
+      padding: 10px;
+      background: rgba(255, 255, 255, .80);
+    }
+
+    .record-thumb {
+      width: 76px;
+      aspect-ratio: 1 / 1;
+      border-radius: 17px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(75, 194, 255, .20), rgba(39, 184, 155, .14));
+      border: 1px solid rgba(255, 255, 255, .52);
+    }
+
+    .record-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .record-main { min-width: 0; }
+
+    .record-main strong {
+      display: block;
+      font-size: 16px;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .record-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .record-note {
+      margin: 7px 0 0;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .empty-state {
+      min-height: 160px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px dashed rgba(148, 163, 184, .48);
+      border-radius: var(--radius-xl);
+      color: var(--muted);
+      background: rgba(255, 255, 255, .52);
+      padding: 22px;
+    }
+
+    .site-footer {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: rgba(51, 65, 85, .78);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, .68);
+    }
+
+    .app-screen .site-footer {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(22px + var(--safe-bottom));
+      z-index: 20;
+      max-width: min(440px, calc(100vw - 32px));
+      padding: 12px 15px;
+      border-radius: 999px;
+      color: #0f172a;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(148, 163, 184, .28);
+      box-shadow: 0 16px 46px rgba(15, 23, 42, .16);
+      opacity: 0;
+      transform: translate(-50%, 14px);
+      pointer-events: none;
+      transition: opacity .18s var(--ease), transform .18s var(--ease);
+      font-size: 14px;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (min-width: 1180px) {
+      .pet-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 1120px) {
+      :root { --container: min(100vw - 28px, 1040px); }
+      .auth-layout { grid-template-columns: 1fr; }
+      .auth-hero { min-height: 420px; }
+      .type-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .record-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .screen { padding: max(14px, var(--safe-top)) 14px calc(18px + var(--safe-bottom)); }
+      .auth-hero { min-height: auto; padding: 28px; }
+      .auth-metrics { margin-top: 28px; }
+      .topbar {
+        grid-template-columns: auto 1fr;
+      }
+      .topbar-actions {
+        grid-column: 1 / -1;
+        justify-content: space-between;
+      }
+      .topbar-actions .ghost-button { flex: 1; }
+      .banner-content,
+      .world-card,
+      .season-head-inner {
+        grid-template-columns: 1fr;
+      }
+      .banner-metrics,
+      .season-metrics {
+        width: 100%;
+        min-width: 0;
+      }
+      .world-count { justify-self: start; }
+      .world-actions { justify-content: flex-start; }
+      .type-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+      .type-card { min-height: 142px; padding: 12px; }
+      .type-name { font-size: 16px; }
+      .type-card .count-number { font-size: 32px; }
+      .type-card .actions { gap: 6px; }
+      .type-card .action-button { min-height: 34px; padding: 6px; }
+      .family-toolbar { align-items: stretch; flex-direction: column; }
+      .select-inline { width: 100%; }
+      .pet-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .record-card { grid-template-columns: 64px minmax(0, 1fr); }
+      .record-card .danger-button { grid-column: 1 / -1; }
+      .record-thumb { width: 64px; }
+    }
+
+    @media (max-width: 560px) {
+      :root { --container: calc(100vw - 20px); }
+      .screen { padding-left: 10px; padding-right: 10px; }
+      .auth-card, .panel, .record-form { border-radius: 24px; }
+      .auth-metrics { grid-template-columns: 1fr; }
+      .brand-title { font-size: 40px; }
+      .main-banner, .world-card, .season-head { border-radius: 24px; }
+      .banner-metrics { grid-template-columns: 1fr 1fr; }
+      .banner-metric strong { font-size: 20px; }
+      .section-heading { align-items: flex-start; flex-direction: column; }
+      .type-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pet-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .season-metrics { grid-template-columns: 1fr; }
+      .site-footer { border-radius: 22px; }
+    }
+  </style>
+</head>
+<body class="is-auth">
+  <div id="authScreen" class="screen auth-screen">
+    <main class="auth-layout" aria-labelledby="authTitle">
+      <section class="auth-hero" aria-label="应用介绍">
+        <div class="brand-mark">洛</div>
+        <h1 id="authTitle" class="brand-title">异色精灵<br><span>保底进度管理</span></h1>
+        <p class="brand-text">账号数据云端同步，适配手机、平板与桌面端使用。</p>
+        <div class="auth-metrics" aria-label="当前赛季信息">
+          <div class="auth-metric"><strong>S1</strong><span>当前赛季</span></div>
+          <div class="auth-metric"><strong>19</strong><span>异色数量</span></div>
+        </div>
+      </section>
+
+      <section class="auth-card" aria-label="账号登录">
+        <h2 id="authHeading">登录账号</h2>
+        <p class="auth-intro">使用邮箱与密码登录后，可在不同设备间同步进度。</p>
+        <div class="mode-toggle" role="tablist" aria-label="账号操作">
+          <button class="mode-button is-active" type="button" data-auth-mode="login">登录</button>
+          <button class="mode-button" type="button" data-auth-mode="register">注册</button>
+        </div>
+        <form id="authForm" autocomplete="on">
+          <div class="field">
+            <label for="emailInput">邮箱</label>
+            <input id="emailInput" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="passwordInput">密码</label>
+            <input id="passwordInput" name="password" type="password" placeholder="至少 6 位" autocomplete="current-password" minlength="6" required />
+          </div>
+          <button id="authSubmit" class="primary-button" type="submit">登录</button>
+          <div id="authStatus" class="status-message" aria-live="polite"></div>
+        </form>
+      </section>
+    </main>
+    <footer class="site-footer">Copyright © 2026 MZG [神-818001]. All rights reserved.</footer>
+  </div>
+
+  <div id="appScreen" class="screen app-screen is-hidden">
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="mini-logo">洛</div>
+        <div class="topbar-title">
+          <strong>洛克王国异色精灵保底进度管理</strong>
+          <span id="userEmailText">未登录</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" type="button" data-scroll-target="worldSection">世界池</button>
+          <button class="ghost-button" type="button" data-scroll-target="typeSection">系别池</button>
+          <button class="ghost-button" type="button" data-scroll-target="familySection">家族池</button>
+          <button class="ghost-button" type="button" data-scroll-target="recordSection">纪念册</button>
+          <button id="logoutButton" class="ghost-button" type="button">退出</button>
+        </div>
+      </header>
+
+      <nav class="nav-pills" aria-label="页面导航">
+        <a href="#worldSection">世界池</a>
+        <a href="#typeSection">系别池</a>
+        <a href="#familySection">家族池</a>
+        <a href="#recordSection">异色纪念册</a>
+      </nav>
+
+      <section class="main-banner" aria-label="当前概览">
+        <div class="banner-content">
+          <div>
+            <span class="eyebrow" id="solarTermText">当前背景</span>
+            <h1 class="main-title">异色精灵<br><span>保底进度管理</span></h1>
+          </div>
+          <div class="banner-metrics" aria-label="赛季概览">
+            <div class="banner-metric"><strong id="bannerSeasonText">S1</strong><span>赛季（S1）</span></div>
+            <div class="banner-metric"><strong id="bannerShinyCount">19</strong><span>赛季异色数量</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="worldSection" class="world-card" aria-labelledby="worldTitle" data-scope="world" data-key="worldPool">
+        <div>
+          <span class="eyebrow">世界池</span>
+          <h2 id="worldTitle" class="world-title">总保底进度</h2>
+          <div class="world-actions">
+            <button class="action-button clear" type="button" data-action="clear">清空</button>
+          </div>
+        </div>
+        <div class="world-count">
+          <strong id="worldCount">0</strong>
+          <span>次</span>
+        </div>
+      </section>
+
+      <section id="typeSection" class="panel" aria-labelledby="typeTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="typeTitle">系别池</h2>
+            <p>按系别记录独立进度。</p>
+          </div>
+          <span id="typeCountText" class="section-count">0 项</span>
+        </div>
+        <div id="typeGrid" class="type-grid"></div>
+      </section>
+
+      <section id="familySection" class="panel" aria-labelledby="familyTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="familyTitle">家族池</h2>
+            <p>按赛季查看家族池精灵。</p>
+          </div>
+          <span id="familyCountText" class="section-count">0 项</span>
+        </div>
+        <div class="family-toolbar">
+          <div class="select-inline">
+            <label for="seasonFilter">赛季</label>
+            <select id="seasonFilter"></select>
+          </div>
+        </div>
+        <div id="seasonContainer"></div>
+      </section>
+
+      <section id="recordSection" class="panel record-area" aria-labelledby="recordTitle">
+        <div class="section-heading">
+          <div>
+            <h2 id="recordTitle">异色纪念册</h2>
+            <p>记录已获得的异色精灵。</p>
+          </div>
+          <span id="recordCountText" class="section-count">0 条</span>
+        </div>
+        <div class="record-layout">
+          <form id="recordForm" class="record-form">
+            <div class="form-grid">
+              <div class="field">
+                <label for="recordSeasonSelect">赛季</label>
+                <select id="recordSeasonSelect" required></select>
+              </div>
+              <div class="field">
+                <label for="recordPetSelect">异色精灵</label>
+                <select id="recordPetSelect" required></select>
+              </div>
+              <div class="field full">
+                <label for="recordDateInput">获得日期</label>
+                <input id="recordDateInput" type="date" required />
+              </div>
+              <div class="field full">
+                <label for="recordNoteInput">备注</label>
+                <textarea id="recordNoteInput" maxlength="120" placeholder="可填写来源、抽数或其他记录信息"></textarea>
+              </div>
+            </div>
+            <button class="primary-button" type="submit">加入纪念册</button>
+            <div id="recordStatus" class="status-message" aria-live="polite"></div>
+          </form>
+          <div id="recordList" class="record-list"></div>
+        </div>
+      </section>
+
+      <footer class="site-footer">Copyright © 2026 MZG [神-818001]. All rights reserved.</footer>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      onSnapshot,
+      runTransaction,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBv6o4ksuLGIix5iMoEi75QJsY1X9wfhJc",
+      authDomain: "roco-771b3.firebaseapp.com",
+      projectId: "roco-771b3",
+      storageBucket: "roco-771b3.firebasestorage.app",
+      messagingSenderId: "179088591818",
+      appId: "1:179088591818:web:f323e691d26219793e5d33",
+      measurementId: "G-7823QFY2HR"
+    };
+
+    const allTypes = ['普通', '草', '火', '水', '光', '地', '冰', '龙', '电', '毒', '虫', '武', '翼', '萌', '幽', '恶', '机械', '幻'];
+
+    const typeColors = {
+      '普通': '#3b657f',
+      '草': '#5db875',
+      '火': '#df5812',
+      '水': '#6eadff',
+      '光': '#4BC2FF',
+      '地': '#a08149',
+      '冰': '#69ADD5',
+      '龙': '#eb4860',
+      '电': '#e1c915',
+      '毒': '#be60d1',
+      '虫': '#9ccc30',
+      '武': '#f99633',
+      '翼': '#3cc3d0',
+      '萌': '#f280a8',
+      '幽': '#904ae1',
+      '恶': '#cd4474',
+      '机械': '#27b89b',
+      '幻': '#99abf7'
+    };
+
+    const seasons = [
+      {
+        id: 's1',
+        shortName: 'S1',
+        title: '暗夜拾光',
+        displayName: 'S1·暗夜拾光',
+        image: 'season/s1.jpg',
+        pets: [
+          { name: '柴渣虫', file: 'chaizhachong', types: ['火', '草'] },
+          { name: '双灯鱼', file: 'shuangdengyu', types: ['水', '电'] },
+          { name: '月牙雪熊', file: 'yueyaxuexiong', types: ['冰', '幻'] },
+          { name: '粉粉星', file: 'fenfenxing', types: ['电', '幻'] },
+          { name: '粉星仔', file: 'fenxingzai', types: ['幻'] },
+          { name: '贝瑟', file: 'beise', types: ['火', '机械'] },
+          { name: '嗜光嗡嗡', file: 'shiguangwengweng', types: ['光', '恶'] },
+          { name: '空空颅', file: 'kongkonglu', types: ['幽'] },
+          { name: '格兰种子', file: 'gelanzhongzi', types: ['草'] },
+          { name: '奇丽草', file: 'qilicao', types: ['草'] },
+          { name: '治愈兔', file: 'zhiyutu', types: ['火', '萌'] },
+          { name: '呼呼猪', file: 'huhuzhu', types: ['冰', '地'] },
+          { name: '机械方方', file: 'jixiefangfang', types: ['机械'] },
+          { name: '恶魔狼', file: 'emolang', types: ['恶'] },
+          { name: '拉特', file: 'late', types: ['电'] },
+          { name: '大耳帽兜', file: 'daermaodou', types: ['冰', '萌'] },
+          { name: '火红尾', file: 'huohongwei', types: ['火'] },
+          { name: '绒绒', file: 'rongrong', types: ['光', '虫'] },
+          { name: '犀角鸟', file: 'xijiaoniao', types: ['光'] }
+        ]
+      }
+    ];
+
+    const solarTerms = [
+      { id: 'lichun', name: '立春' },
+      { id: 'yushui', name: '雨水' },
+      { id: 'jingzhe', name: '惊蛰' },
+      { id: 'chunfen', name: '春分' },
+      { id: 'qingming', name: '清明' },
+      { id: 'guyu', name: '谷雨' },
+      { id: 'lixia', name: '立夏' },
+      { id: 'xiaoman', name: '小满' },
+      { id: 'mangzhong', name: '芒种' },
+      { id: 'xiazhi', name: '夏至' },
+      { id: 'xiaoshu', name: '小暑' },
+      { id: 'dashu', name: '大暑' },
+      { id: 'liqiu', name: '立秋' },
+      { id: 'chushu', name: '处暑' },
+      { id: 'bailu', name: '白露' },
+      { id: 'qiufen', name: '秋分' },
+      { id: 'hanlu', name: '寒露' },
+      { id: 'shuangjiang', name: '霜降' },
+      { id: 'lidong', name: '立冬' },
+      { id: 'xiaoxue', name: '小雪' },
+      { id: 'daxue', name: '大雪' },
+      { id: 'dongzhi', name: '冬至' },
+      { id: 'xiaohan', name: '小寒' },
+      { id: 'dahan', name: '大寒' }
+    ];
+
+    const familyPets = seasons.flatMap(season => season.pets.map(pet => ({ ...pet, seasonId: season.id })));
+    const typeIndexMap = new Map(allTypes.map((type, index) => [type, index]));
+    const familyIndexMap = new Map(familyPets.map((pet, index) => [pet.name, index]));
+    const familyPetMap = new Map(familyPets.map(pet => [pet.name, pet]));
+    const seasonMap = new Map(seasons.map(season => [season.id, season]));
+
+    const els = {
+      authScreen: document.getElementById('authScreen'),
+      appScreen: document.getElementById('appScreen'),
+      authForm: document.getElementById('authForm'),
+      authHeading: document.getElementById('authHeading'),
+      authSubmit: document.getElementById('authSubmit'),
+      authStatus: document.getElementById('authStatus'),
+      emailInput: document.getElementById('emailInput'),
+      passwordInput: document.getElementById('passwordInput'),
+      logoutButton: document.getElementById('logoutButton'),
+      userEmailText: document.getElementById('userEmailText'),
+      worldCount: document.getElementById('worldCount'),
+      typeGrid: document.getElementById('typeGrid'),
+      typeCountText: document.getElementById('typeCountText'),
+      familyCountText: document.getElementById('familyCountText'),
+      seasonFilter: document.getElementById('seasonFilter'),
+      seasonContainer: document.getElementById('seasonContainer'),
+      recordForm: document.getElementById('recordForm'),
+      recordSeasonSelect: document.getElementById('recordSeasonSelect'),
+      recordPetSelect: document.getElementById('recordPetSelect'),
+      recordDateInput: document.getElementById('recordDateInput'),
+      recordNoteInput: document.getElementById('recordNoteInput'),
+      recordList: document.getElementById('recordList'),
+      recordStatus: document.getElementById('recordStatus'),
+      recordCountText: document.getElementById('recordCountText'),
+      bannerSeasonText: document.getElementById('bannerSeasonText'),
+      bannerShinyCount: document.getElementById('bannerShinyCount'),
+      solarTermText: document.getElementById('solarTermText'),
+      toast: document.getElementById('toast')
+    };
+
+    let app;
+    let auth;
+    let db;
+    let currentUser = null;
+    let unsubscribeUserDoc = null;
+    let selectedSeasonId = seasons[0].id;
+    let authMode = 'login';
+    let state = createDefaultData();
+    let heightUpdateFrame = 0;
+
+    function clampCount(value) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return 0;
+      return Math.max(0, Math.floor(number));
+    }
+
+    function createDefaultData() {
+      return {
+        userId: '',
+        typePools: Object.fromEntries(allTypes.map(type => [type, 0])),
+        familyPools: Object.fromEntries(familyPets.map(pet => [pet.name, 0])),
+        worldPool: 0,
+        shinyRecords: []
+      };
+    }
+
+    function normalizeData(raw = {}) {
+      const data = createDefaultData();
+      data.userId = typeof raw.userId === 'string' ? raw.userId : '';
+      const rawTypePools = raw.typePools || {};
+      const rawFamilyPools = raw.familyPools || {};
+      for (const type of allTypes) data.typePools[type] = clampCount(rawTypePools[type]);
+      for (const pet of familyPets) data.familyPools[pet.name] = clampCount(rawFamilyPools[pet.name]);
+      data.worldPool = clampCount(raw.worldPool);
+      data.shinyRecords = Array.isArray(raw.shinyRecords)
+        ? raw.shinyRecords
+            .filter(record => record && typeof record === 'object')
+            .map(record => ({
+              id: typeof record.id === 'string' && record.id ? record.id : cryptoRandomId(),
+              seasonId: seasonMap.has(record.seasonId) ? record.seasonId : seasons[0].id,
+              petName: familyPetMap.has(record.petName) ? record.petName : '',
+              date: typeof record.date === 'string' ? record.date.slice(0, 10) : '',
+              note: typeof record.note === 'string' ? record.note.slice(0, 120) : '',
+              createdAt: typeof record.createdAt === 'string' ? record.createdAt : ''
+            }))
+            .filter(record => record.petName && record.date)
+        : [];
+      return data;
+    }
+
+    function getSerializableData(data) {
+      return {
+        userId: currentUser?.uid || data.userId || '',
+        typePools: { ...data.typePools },
+        familyPools: { ...data.familyPools },
+        worldPool: clampCount(data.worldPool),
+        shinyRecords: [...data.shinyRecords]
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[char]));
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value);
+    }
+
+    function formatCount(value) {
+      return String(clampCount(value));
+    }
+
+    function hexToRgb(hex) {
+      const clean = String(hex).replace('#', '').trim();
+      const value = clean.length === 3 ? clean.split('').map(ch => ch + ch).join('') : clean;
+      const num = Number.parseInt(value, 16);
+      if (!Number.isFinite(num)) return '100, 116, 139';
+      return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+    }
+
+    function cryptoRandomId() {
+      if (crypto?.randomUUID) return crypto.randomUUID();
+      return `rec_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function todayString() {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add('is-visible');
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => els.toast.classList.remove('is-visible'), 2400);
+    }
+
+    function setStatus(element, message, type = '') {
+      element.textContent = message || '';
+      element.classList.remove('error', 'success');
+      if (type) element.classList.add(type);
+    }
+
+    function degToRad(deg) { return deg * Math.PI / 180; }
+    function normalizeAngle(deg) { return ((deg % 360) + 360) % 360; }
+
+    function julianDay(date) {
+      return date.getTime() / 86400000 + 2440587.5;
+    }
+
+    function sunLongitude(date) {
+      const t = (julianDay(date) - 2451545.0) / 36525;
+      const l0 = normalizeAngle(280.46646 + 36000.76983 * t + 0.0003032 * t * t);
+      const m = normalizeAngle(357.52911 + 35999.05029 * t - 0.0001537 * t * t);
+      const c = (1.914602 - 0.004817 * t - 0.000014 * t * t) * Math.sin(degToRad(m))
+        + (0.019993 - 0.000101 * t) * Math.sin(degToRad(2 * m))
+        + 0.000289 * Math.sin(degToRad(3 * m));
+      return normalizeAngle(l0 + c);
+    }
+
+    function currentSolarTerm(date = new Date()) {
+      const longitude = sunLongitude(date);
+      const index = Math.floor(normalizeAngle(longitude - 315) / 15) % 24;
+      return solarTerms[index] || solarTerms[0];
+    }
+
+    function applySeasonalBackground() {
+      const term = currentSolarTerm();
+      document.documentElement.style.setProperty('--seasonal-background-image', `url("pic/background/${term.id}.jpg")`);
+      els.solarTermText.textContent = `当前节气 · ${term.name}`;
+    }
+
+    function updatePageBackgroundHeight() {
+      if (heightUpdateFrame) cancelAnimationFrame(heightUpdateFrame);
+      heightUpdateFrame = requestAnimationFrame(() => {
+        const height = Math.max(
+          window.innerHeight,
+          document.documentElement.scrollHeight,
+          document.body.scrollHeight
+        );
+        document.documentElement.style.setProperty('--page-bg-height', `${height}px`);
+        heightUpdateFrame = 0;
+      });
+    }
+
+    function buildStaticUI() {
+      els.typeGrid.innerHTML = allTypes.map((type, index) => {
+        const color = typeColors[type] || '#64748b';
+        return `
+          <article class="type-card" data-scope="type" data-key="${escapeAttribute(type)}" style="--type-color:${escapeAttribute(color)}; --type-rgb:${hexToRgb(color)};">
+            <div class="type-head">
+              <h3 class="type-name">${escapeHtml(type)}</h3>
+              <span class="type-index">${String(index + 1).padStart(2, '0')}</span>
+            </div>
+            <div class="count-row">
+              <span id="type-count-${index}" class="count-number">0</span>
+              <span class="count-unit">次</span>
+            </div>
+            <div class="actions">
+              <button class="action-button plus" type="button" data-action="inc">+1</button>
+              <button class="action-button minus" type="button" data-action="dec">-1</button>
+              <button class="action-button clear" type="button" data-action="clear">清空</button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      const seasonOptions = seasons.map(season => `<option value="${escapeAttribute(season.id)}">${escapeHtml(season.displayName)}</option>`).join('');
+      els.seasonFilter.innerHTML = seasonOptions;
+      els.recordSeasonSelect.innerHTML = seasonOptions;
+      els.recordDateInput.value = todayString();
+      els.bannerSeasonText.textContent = seasons[0].shortName;
+      els.bannerShinyCount.textContent = String(seasons[0].pets.length);
+      els.typeCountText.textContent = `${allTypes.length} 项`;
+      els.familyCountText.textContent = `${familyPets.length} 项`;
+      updateRecordPetOptions();
+      renderSeasonGroup();
+    }
+
+    function updateRecordPetOptions() {
+      const season = seasonMap.get(els.recordSeasonSelect.value) || seasons[0];
+      els.recordPetSelect.innerHTML = season.pets.map(pet => `<option value="${escapeAttribute(pet.name)}">${escapeHtml(pet.name)}</option>`).join('');
+    }
+
+    function renderSeasonGroup() {
+      const season = seasonMap.get(selectedSeasonId) || seasons[0];
+      els.seasonFilter.value = season.id;
+      const totalProgress = season.pets.reduce((sum, pet) => sum + clampCount(state.familyPools[pet.name]), 0);
+      const recordsInSeason = state.shinyRecords.filter(record => record.seasonId === season.id).length;
+      const litPets = new Set(state.shinyRecords.filter(record => record.seasonId === season.id).map(record => record.petName)).size;
+      els.seasonContainer.innerHTML = `
+        <section class="season-group" data-season-id="${escapeAttribute(season.id)}">
+          <div class="season-head" style="--season-image:url('${escapeAttribute(season.image)}')">
+            <div class="season-head-inner">
+              <div>
+                <span class="eyebrow">${escapeHtml(season.shortName)}</span>
+                <h3 class="season-title"><span>${escapeHtml(season.title)}</span></h3>
+              </div>
+              <div class="season-metrics" aria-label="赛季统计">
+                <div class="season-metric"><strong id="season-progress-${escapeAttribute(season.id)}">${formatCount(totalProgress)}</strong><span>家族进度</span></div>
+                <div class="season-metric"><strong id="season-records-${escapeAttribute(season.id)}">${formatCount(recordsInSeason)}</strong><span>异色收录</span></div>
+                <div class="season-metric"><strong id="season-lit-${escapeAttribute(season.id)}">${formatCount(litPets)}</strong><span>点亮精灵</span></div>
+              </div>
+            </div>
+          </div>
+          <button class="season-toggle" type="button" data-season-toggle="${escapeAttribute(season.id)}"><span class="chevron">▾</span> 展开 / 收起</button>
+          <div class="season-body">
+            <div class="pet-grid">
+              ${season.pets.map((pet) => renderPetCard(pet, season.id)).join('')}
+            </div>
+          </div>
+        </section>
+      `;
+      queueUiHeightUpdate();
+    }
+
+    function renderPetCard(pet, seasonId) {
+      const globalIndex = familyIndexMap.get(pet.name);
+      const owned = getOwnedCount(seasonId, pet.name);
+      const ownedClass = owned > 0 ? ' has-owned' : '';
+      return `
+        <article class="pet-card${ownedClass}" data-scope="family" data-key="${escapeAttribute(pet.name)}" data-season-id="${escapeAttribute(seasonId)}">
+          <div class="pet-media">
+            <img src="pet/${escapeAttribute(pet.file)}.jpg" alt="${escapeAttribute(pet.name)}" loading="lazy" onerror="this.style.display='none'" />
+            <span id="owned-${escapeAttribute(seasonId)}-${globalIndex}" class="owned-badge${owned > 0 ? ' is-visible' : ''}">已拥有 ×${formatCount(owned)}</span>
+          </div>
+          <div class="pet-content">
+            <div class="pet-title-row">
+              <h3 class="pet-name">${escapeHtml(pet.name)}</h3>
+            </div>
+            <div class="type-tags">${pet.types.map(type => `<span class="type-tag">${escapeHtml(type)}</span>`).join('')}</div>
+            <div class="count-row">
+              <span id="family-count-${globalIndex}" class="count-number">${formatCount(state.familyPools[pet.name])}</span>
+              <span class="count-unit">次</span>
+            </div>
+            <div class="actions">
+              <button class="action-button plus" type="button" data-action="inc">+1</button>
+              <button class="action-button minus" type="button" data-action="dec">-1</button>
+              <button class="action-button clear" type="button" data-action="clear">清空</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function getOwnedCount(seasonId, petName) {
+      return state.shinyRecords.filter(record => record.seasonId === seasonId && record.petName === petName).length;
+    }
+
+    function updateDynamicUI() {
+      els.worldCount.textContent = formatCount(state.worldPool);
+      for (const [type, index] of typeIndexMap.entries()) {
+        const node = document.getElementById(`type-count-${index}`);
+        if (node) node.textContent = formatCount(state.typePools[type]);
+      }
+      for (const [petName, index] of familyIndexMap.entries()) {
+        const node = document.getElementById(`family-count-${index}`);
+        if (node) node.textContent = formatCount(state.familyPools[petName]);
+      }
+      updateSeasonMetrics();
+      renderRecords();
+      updatePetOwnedBadges();
+      queueUiHeightUpdate();
+    }
+
+    function updateSeasonMetrics() {
+      const season = seasonMap.get(selectedSeasonId) || seasons[0];
+      const totalProgress = season.pets.reduce((sum, pet) => sum + clampCount(state.familyPools[pet.name]), 0);
+      const recordsInSeason = state.shinyRecords.filter(record => record.seasonId === season.id).length;
+      const litPets = new Set(state.shinyRecords.filter(record => record.seasonId === season.id).map(record => record.petName)).size;
+      const progressNode = document.getElementById(`season-progress-${season.id}`);
+      const recordsNode = document.getElementById(`season-records-${season.id}`);
+      const litNode = document.getElementById(`season-lit-${season.id}`);
+      if (progressNode) progressNode.textContent = formatCount(totalProgress);
+      if (recordsNode) recordsNode.textContent = formatCount(recordsInSeason);
+      if (litNode) litNode.textContent = formatCount(litPets);
+    }
+
+    function updatePetOwnedBadges() {
+      const season = seasonMap.get(selectedSeasonId) || seasons[0];
+      for (const pet of season.pets) {
+        const index = familyIndexMap.get(pet.name);
+        const count = getOwnedCount(season.id, pet.name);
+        const badge = document.getElementById(`owned-${season.id}-${index}`);
+        const card = badge?.closest('.pet-card');
+        if (!badge || !card) continue;
+        badge.textContent = `已拥有 ×${formatCount(count)}`;
+        badge.classList.toggle('is-visible', count > 0);
+        card.classList.toggle('has-owned', count > 0);
+      }
+    }
+
+    function renderRecords() {
+      const records = [...state.shinyRecords].sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(b.createdAt).localeCompare(String(a.createdAt)));
+      els.recordCountText.textContent = `${records.length} 条`;
+      if (!records.length) {
+        els.recordList.innerHTML = `<div class="empty-state">尚未收录异色精灵</div>`;
+        return;
+      }
+      els.recordList.innerHTML = records.map(record => {
+        const season = seasonMap.get(record.seasonId) || seasons[0];
+        const pet = season.pets.find(item => item.name === record.petName) || familyPetMap.get(record.petName);
+        const file = pet?.file || '';
+        return `
+          <article class="record-card">
+            <div class="record-thumb">
+              ${file ? `<img src="pet/${escapeAttribute(file)}.jpg" alt="${escapeAttribute(record.petName)}" loading="lazy" onerror="this.style.display='none'" />` : ''}
+            </div>
+            <div class="record-main">
+              <strong>${escapeHtml(record.petName)}</strong>
+              <div class="record-meta"><span>${escapeHtml(season.displayName)}</span><span>${escapeHtml(record.date)}</span></div>
+              ${record.note ? `<p class="record-note">${escapeHtml(record.note)}</p>` : ''}
+            </div>
+            <button class="danger-button" type="button" data-record-delete="${escapeAttribute(record.id)}">删除</button>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function incrementField(target, key, delta) {
+      target[key] = Math.max(0, clampCount(target[key]) + delta);
+    }
+
+    function mutateForIncrement(data, scope, key, delta) {
+      const next = normalizeData(data);
+      if (scope === 'family') {
+        const pet = familyPetMap.get(key);
+        if (!pet) return next;
+        incrementField(next.familyPools, pet.name, delta);
+        for (const type of pet.types) {
+          if (typeIndexMap.has(type)) incrementField(next.typePools, type, delta);
+        }
+        next.worldPool = Math.max(0, clampCount(next.worldPool) + delta);
+        return next;
+      }
+      if (scope === 'type') {
+        if (!typeIndexMap.has(key)) return next;
+        incrementField(next.typePools, key, delta);
+        next.worldPool = Math.max(0, clampCount(next.worldPool) + delta);
+        return next;
+      }
+      return next;
+    }
+
+    function mutateForClear(data, scope, key) {
+      const next = normalizeData(data);
+      if (scope === 'family' && familyPetMap.has(key)) next.familyPools[key] = 0;
+      if (scope === 'type' && typeIndexMap.has(key)) next.typePools[key] = 0;
+      if (scope === 'world') next.worldPool = 0;
+      return next;
+    }
+
+    function clearConfirmText(scope, key) {
+      if (scope === 'family') return `确定要清空【${key}】的进度吗？`;
+      if (scope === 'type') return `确定要清空【${key}】系别进度吗？`;
+      return '确定要清空【世界池】的进度吗？';
+    }
+
+    async function saveWithTransaction(mutator) {
+      if (!currentUser || !db) return;
+      const userRef = doc(db, 'users', currentUser.uid);
+      await runTransaction(db, async transaction => {
+        const snapshot = await transaction.get(userRef);
+        const current = normalizeData(snapshot.exists() ? snapshot.data() : {});
+        const next = normalizeData(mutator(current));
+        transaction.set(userRef, {
+          ...getSerializableData(next),
+          userId: currentUser.uid,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      });
+    }
+
+    async function handleCountAction(scope, key, action) {
+      if (!currentUser) return;
+      const validScope = scope === 'world' || scope === 'type' || scope === 'family';
+      if (!validScope) return;
+      if (scope === 'type' && !typeIndexMap.has(key)) return;
+      if (scope === 'family' && !familyPetMap.has(key)) return;
+      try {
+        if (action === 'inc' || action === 'dec') {
+          if (scope === 'world') return;
+          const delta = action === 'inc' ? 1 : -1;
+          await saveWithTransaction(data => mutateForIncrement(data, scope, key, delta));
+          return;
+        }
+        if (action === 'clear') {
+          if (!window.confirm(clearConfirmText(scope, key))) return;
+          await saveWithTransaction(data => mutateForClear(data, scope, key));
+        }
+      } catch (error) {
+        console.error(error);
+        showToast(`保存失败：${error.code || error.message || '未知错误'}`);
+      }
+    }
+
+    async function addRecord(event) {
+      event.preventDefault();
+      if (!currentUser) return;
+      const seasonId = els.recordSeasonSelect.value;
+      const petName = els.recordPetSelect.value;
+      const date = els.recordDateInput.value;
+      const note = els.recordNoteInput.value.trim().slice(0, 120);
+      const season = seasonMap.get(seasonId);
+      if (!season || !season.pets.some(pet => pet.name === petName) || !date) {
+        setStatus(els.recordStatus, '请选择有效的赛季、精灵与日期。', 'error');
+        return;
+      }
+      const record = { id: cryptoRandomId(), seasonId, petName, date, note, createdAt: new Date().toISOString() };
+      try {
+        await saveWithTransaction(data => {
+          const next = normalizeData(data);
+          next.shinyRecords = [...next.shinyRecords, record];
+          return next;
+        });
+        els.recordNoteInput.value = '';
+        setStatus(els.recordStatus, '已加入纪念册。', 'success');
+        showToast('已加入纪念册');
+      } catch (error) {
+        console.error(error);
+        setStatus(els.recordStatus, `保存失败：${error.code || error.message || '未知错误'}`, 'error');
+      }
+    }
+
+    async function deleteRecord(recordId) {
+      if (!recordId || !currentUser) return;
+      if (!window.confirm('确定要删除这条异色收录记录吗？')) return;
+      try {
+        await saveWithTransaction(data => {
+          const next = normalizeData(data);
+          next.shinyRecords = next.shinyRecords.filter(record => record.id !== recordId);
+          return next;
+        });
+        showToast('记录已删除');
+      } catch (error) {
+        console.error(error);
+        showToast(`删除失败：${error.code || error.message || '未知错误'}`);
+      }
+    }
+
+    function authErrorMessage(error) {
+      const code = error?.code || '';
+      const messages = {
+        'auth/configuration-not-found': 'Firebase Auth 尚未正确配置，请检查项目配置并启用 Email/Password。',
+        'auth/invalid-email': '邮箱格式不正确。',
+        'auth/user-disabled': '该账号已被停用。',
+        'auth/user-not-found': '账号不存在，请先注册。',
+        'auth/wrong-password': '密码不正确。',
+        'auth/invalid-credential': '账号或密码不正确。',
+        'auth/email-already-in-use': '该邮箱已注册，请直接登录。',
+        'auth/weak-password': '密码强度不足，至少需要 6 位。',
+        'auth/unauthorized-domain': '当前域名未加入 Firebase Auth 授权域名。',
+        'auth/network-request-failed': '网络连接失败，请稍后重试。'
+      };
+      return messages[code] || `操作失败：${code || error?.message || '未知错误'}`;
+    }
+
+    function isFirebaseConfigReady() {
+      return Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.authDomain);
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode === 'register' ? 'register' : 'login';
+      document.querySelectorAll('[data-auth-mode]').forEach(button => {
+        button.classList.toggle('is-active', button.dataset.authMode === authMode);
+      });
+      els.authHeading.textContent = authMode === 'login' ? '登录账号' : '注册账号';
+      els.authSubmit.textContent = authMode === 'login' ? '登录' : '注册';
+      els.passwordInput.autocomplete = authMode === 'login' ? 'current-password' : 'new-password';
+      setStatus(els.authStatus, '');
+    }
+
+    async function ensureUserDocument(user) {
+      const userRef = doc(db, 'users', user.uid);
+      const snapshot = await getDoc(userRef);
+      if (!snapshot.exists()) {
+        const data = createDefaultData();
+        data.userId = user.uid;
+        await setDoc(userRef, { ...data, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true });
+      }
+    }
+
+    function subscribeToUserDocument(user) {
+      if (unsubscribeUserDoc) unsubscribeUserDoc();
+      const userRef = doc(db, 'users', user.uid);
+      unsubscribeUserDoc = onSnapshot(userRef, snapshot => {
+        state = normalizeData(snapshot.exists() ? snapshot.data() : {});
+        updateDynamicUI();
+      }, error => {
+        console.error(error);
+        showToast(`无法监听数据变化：${error.code || error.message || '未知错误'}`);
+      });
+    }
+
+    async function handleAuthSubmit(event) {
+      event.preventDefault();
+      if (!isFirebaseConfigReady()) {
+        setStatus(els.authStatus, 'Firebase 配置不完整。', 'error');
+        return;
+      }
+      const email = els.emailInput.value.trim();
+      const password = els.passwordInput.value;
+      if (!email || !password) return;
+      els.authSubmit.disabled = true;
+      setStatus(els.authStatus, authMode === 'login' ? '正在登录…' : '正在注册…');
+      try {
+        if (authMode === 'login') {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+        setStatus(els.authStatus, '');
+      } catch (error) {
+        console.error(error);
+        setStatus(els.authStatus, authErrorMessage(error), 'error');
+      } finally {
+        els.authSubmit.disabled = false;
+      }
+    }
+
+    function showAuthScreen() {
+      document.body.classList.add('is-auth');
+      document.body.classList.remove('is-app');
+      els.authScreen.classList.remove('is-hidden');
+      els.appScreen.classList.add('is-hidden');
+      currentUser = null;
+      els.userEmailText.textContent = '未登录';
+      updatePageBackgroundHeight();
+    }
+
+    function showAppScreen(user) {
+      document.body.classList.add('is-app');
+      document.body.classList.remove('is-auth');
+      els.authScreen.classList.add('is-hidden');
+      els.appScreen.classList.remove('is-hidden');
+      currentUser = user;
+      els.userEmailText.textContent = user.email || user.uid;
+      updatePageBackgroundHeight();
+    }
+
+    function queueUiHeightUpdate() {
+      requestAnimationFrame(updatePageBackgroundHeight);
+    }
+
+    function initializeFirebase() {
+      if (!isFirebaseConfigReady()) {
+        setStatus(els.authStatus, 'Firebase 配置不完整。', 'error');
+        return;
+      }
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+      onAuthStateChanged(auth, async user => {
+        if (!user) {
+          if (unsubscribeUserDoc) unsubscribeUserDoc();
+          unsubscribeUserDoc = null;
+          state = createDefaultData();
+          updateDynamicUI();
+          showAuthScreen();
+          return;
+        }
+        try {
+          showAppScreen(user);
+          await ensureUserDocument(user);
+          subscribeToUserDocument(user);
+        } catch (error) {
+          console.error(error);
+          showToast(`初始化失败：${error.code || error.message || '未知错误'}`);
+        }
+      });
+    }
+
+    document.querySelectorAll('[data-auth-mode]').forEach(button => {
+      button.addEventListener('click', () => setAuthMode(button.dataset.authMode));
+    });
+
+    els.authForm.addEventListener('submit', handleAuthSubmit);
+    els.logoutButton.addEventListener('click', async () => {
+      try { await signOut(auth); } catch (error) { showToast(`退出失败：${error.code || error.message || '未知错误'}`); }
+    });
+
+    els.appScreen.addEventListener('click', event => {
+      const scrollButton = event.target.closest('[data-scroll-target]');
+      if (scrollButton) {
+        document.getElementById(scrollButton.dataset.scrollTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      const deleteButton = event.target.closest('[data-record-delete]');
+      if (deleteButton) {
+        deleteRecord(deleteButton.dataset.recordDelete);
+        return;
+      }
+      const toggleButton = event.target.closest('[data-season-toggle]');
+      if (toggleButton) {
+        toggleButton.closest('.season-group')?.classList.toggle('is-collapsed');
+        queueUiHeightUpdate();
+        return;
+      }
+      const actionButton = event.target.closest('[data-action]');
+      if (!actionButton) return;
+      const card = actionButton.closest('[data-scope]');
+      if (!card) return;
+      handleCountAction(card.dataset.scope, card.dataset.key, actionButton.dataset.action);
+    });
+
+    els.seasonFilter.addEventListener('change', () => {
+      selectedSeasonId = els.seasonFilter.value;
+      renderSeasonGroup();
+      updateDynamicUI();
+    });
+
+    els.recordSeasonSelect.addEventListener('change', updateRecordPetOptions);
+    els.recordForm.addEventListener('submit', addRecord);
+
+    window.addEventListener('resize', updatePageBackgroundHeight, { passive: true });
+    window.addEventListener('orientationchange', updatePageBackgroundHeight, { passive: true });
+    if ('ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver(updatePageBackgroundHeight);
+      resizeObserver.observe(document.body);
+    }
+
+    applySeasonalBackground();
+    buildStaticUI();
+    updateDynamicUI();
+    initializeFirebase();
+  </script>
+</body>
+</html>
