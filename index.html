@@ -3,35 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6fbff" />
   <title>洛克王国异色精灵保底进度</title>
   <style>
     :root {
-      --bg: #f5f8fb;
-      --bg-2: #eaf7f5;
-      --card: rgba(255, 255, 255, 0.82);
-      --card-solid: #ffffff;
-      --text: #172033;
-      --muted: #6b7280;
-      --subtle: #94a3b8;
-      --line: rgba(148, 163, 184, 0.28);
-      --primary: #27b8a6;
-      --primary-2: #4f8cff;
-      --primary-dark: #139482;
-      --danger: #ff5e6c;
-      --danger-soft: #fff0f2;
-      --warning: #f59e0b;
-      --shadow: 0 24px 70px rgba(31, 41, 55, 0.13);
-      --shadow-soft: 0 14px 36px rgba(31, 41, 55, 0.08);
-      --radius-lg: 28px;
-      --radius-md: 20px;
-      --radius-sm: 14px;
-      --container: 1180px;
+      --bg: #f6f9fc;
+      --surface: rgba(255, 255, 255, .78);
+      --surface-strong: rgba(255, 255, 255, .92);
+      --text: #142033;
+      --muted: #69768a;
+      --subtle: #93a2b7;
+      --line: rgba(116, 135, 160, .22);
+      --primary: #27b89b;
+      --primary-2: #4bc2ff;
+      --primary-3: #99abf7;
+      --danger: #ee4f66;
+      --danger-2: #c82d4a;
+      --ink-on-dark: #f8efe0;
+      --shadow: 0 26px 80px rgba(31, 46, 70, .13);
+      --shadow-soft: 0 14px 40px rgba(31, 46, 70, .09);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --container: 1320px;
       --ease: cubic-bezier(.2, .8, .2, 1);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -40,16 +38,17 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       -webkit-font-smoothing: antialiased;
       text-rendering: geometricPrecision;
+      scroll-behavior: smooth;
     }
 
     body {
       min-height: 100vh;
       margin: 0;
       background:
-        radial-gradient(circle at 12% 10%, rgba(79, 140, 255, .18), transparent 28%),
-        radial-gradient(circle at 82% 8%, rgba(39, 184, 166, .20), transparent 26%),
-        radial-gradient(circle at 48% 94%, rgba(255, 94, 108, .12), transparent 30%),
-        linear-gradient(135deg, #f7fbff 0%, #f3fbf8 50%, #f8f7ff 100%);
+        radial-gradient(circle at 10% 8%, rgba(75, 194, 255, .20), transparent 30%),
+        radial-gradient(circle at 86% 6%, rgba(39, 184, 155, .18), transparent 28%),
+        radial-gradient(circle at 56% 96%, rgba(153, 171, 247, .18), transparent 34%),
+        linear-gradient(135deg, #f8fbff 0%, #eff9f6 48%, #f8f7ff 100%);
       overflow-x: hidden;
     }
 
@@ -57,62 +56,52 @@
       content: "";
       position: fixed;
       inset: 0;
+      z-index: 0;
       pointer-events: none;
       background-image:
-        linear-gradient(rgba(23, 32, 51, .035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(23, 32, 51, .035) 1px, transparent 1px);
-      background-size: 32px 32px;
-      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .7), transparent 74%);
-      z-index: 0;
+        linear-gradient(rgba(20, 32, 51, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20, 32, 51, .035) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.75), transparent 78%);
     }
 
-    button,
-    input {
-      font: inherit;
-    }
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    button:disabled, input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; opacity: .55; }
+    img { max-width: 100%; display: block; }
 
-    button {
-      border: 0;
-      cursor: pointer;
-    }
-
-    button:disabled,
-    input:disabled {
-      cursor: not-allowed;
-      opacity: .58;
-    }
-
-    .screen {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      padding: 24px;
-    }
-
-    .is-hidden {
-      display: none !important;
-    }
+    .is-hidden { display: none !important; }
+    .screen { position: relative; z-index: 1; min-height: 100vh; }
 
     .auth-screen {
       display: grid;
-      place-items: center;
+      grid-template-rows: 1fr auto;
+      gap: 18px;
+      padding: 24px;
+      align-items: center;
     }
 
     .auth-shell {
-      width: min(100%, 980px);
+      width: min(100%, 1040px);
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: 1.02fr .98fr;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr);
       gap: 22px;
       align-items: stretch;
     }
 
+    .glass,
     .brand-panel,
     .auth-card,
-    .panel,
     .topbar,
-    .count-card {
+    .hero,
+    .pool-section,
+    .count-card,
+    .season-panel,
+    .record-card,
+    .record-form {
       border: 1px solid var(--line);
-      background: var(--card);
+      background: var(--surface);
       backdrop-filter: blur(22px);
       -webkit-backdrop-filter: blur(22px);
       box-shadow: var(--shadow-soft);
@@ -120,83 +109,120 @@
 
     .brand-panel {
       position: relative;
-      min-height: 560px;
+      min-height: 590px;
       overflow: hidden;
-      border-radius: var(--radius-lg);
-      padding: 42px;
+      border-radius: var(--radius-xl);
+      padding: clamp(28px, 4vw, 48px);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
+    .brand-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(75, 194, 255, .24), transparent 34%),
+        radial-gradient(circle at 92% 94%, rgba(39, 184, 155, .30), transparent 30%);
+      pointer-events: none;
+    }
+
     .brand-panel::after {
       content: "";
       position: absolute;
-      right: -100px;
-      bottom: -120px;
-      width: 350px;
-      height: 350px;
+      right: -120px;
+      bottom: -145px;
+      width: 390px;
+      height: 390px;
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(39, 184, 166, .48), rgba(79, 140, 255, .32));
-      filter: blur(4px);
-      opacity: .9;
+      background: linear-gradient(135deg, rgba(39, 184, 155, .48), rgba(75, 194, 255, .34));
+      filter: blur(3px);
+      opacity: .92;
     }
 
-    .brand-mark {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
+    .brand-content, .brand-meta { position: relative; z-index: 1; }
+
+    .brand-mark,
+    .mini-logo {
       display: grid;
       place-items: center;
       color: white;
-      font-size: 28px;
       font-weight: 900;
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      box-shadow: 0 18px 44px rgba(39, 184, 166, .32);
+      box-shadow: 0 18px 44px rgba(39, 184, 155, .28);
+    }
+
+    .brand-mark {
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      font-size: 30px;
     }
 
     .brand-title {
-      margin: 26px 0 12px;
-      font-size: clamp(36px, 5vw, 58px);
+      margin: 28px 0 16px;
+      font-size: clamp(38px, 5.2vw, 64px);
       line-height: 1.04;
-      letter-spacing: -.06em;
+      letter-spacing: -.065em;
     }
 
-    .brand-title span {
-      color: var(--primary-dark);
-    }
+    .brand-title span { color: #158c7d; }
 
     .brand-text {
-      max-width: 480px;
+      max-width: 510px;
+      margin: 0;
       color: var(--muted);
       font-size: 16px;
       line-height: 1.75;
     }
 
+    .brand-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(148,163,184,.22);
+      color: #334155;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
     .dot {
       width: 9px;
       height: 9px;
-      border-radius: 99px;
+      flex: 0 0 auto;
+      border-radius: 999px;
       background: var(--primary);
-      box-shadow: 0 0 0 5px rgba(39, 184, 166, .14);
+      box-shadow: 0 0 0 5px rgba(39, 184, 155, .14);
     }
 
     .auth-card {
-      border-radius: var(--radius-lg);
-      padding: 34px;
+      border-radius: var(--radius-xl);
+      padding: clamp(24px, 3vw, 38px);
       display: flex;
       flex-direction: column;
       justify-content: center;
+      background: rgba(255,255,255,.86);
     }
 
     .auth-card h2 {
       margin: 0 0 8px;
-      font-size: 30px;
-      letter-spacing: -.04em;
+      font-size: 32px;
+      letter-spacing: -.045em;
     }
 
     .auth-card p {
-      margin: 0;
+      margin: 0 0 24px;
       color: var(--muted);
       line-height: 1.65;
     }
@@ -206,1513 +232,530 @@
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       padding: 6px;
-      margin: 26px 0;
-      border-radius: 16px;
-      background: rgba(226, 232, 240, .64);
+      margin-bottom: 20px;
+      border-radius: 18px;
+      background: rgba(226,232,240,.72);
     }
 
     .mode-button {
-      padding: 12px 14px;
-      border-radius: 12px;
+      min-height: 42px;
+      border-radius: 14px;
+      color: #64748b;
+      font-weight: 850;
       background: transparent;
-      color: var(--muted);
-      font-weight: 800;
-      transition: all .18s var(--ease);
+      transition: all .22s var(--ease);
     }
 
     .mode-button.is-active {
-      color: var(--text);
-      background: #fff;
-      box-shadow: 0 8px 22px rgba(15, 23, 42, .08);
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow: 0 12px 26px rgba(39,184,155,.22);
     }
 
-    .field-group {
-      display: grid;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
+    .field-group { display: grid; gap: 8px; margin-bottom: 14px; }
+    .field-group label { color: #334155; font-size: 13px; font-weight: 850; }
 
-    .field-group label {
-      color: #334155;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .field-group input {
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
       width: 100%;
-      border: 1px solid rgba(148, 163, 184, .34);
-      border-radius: 16px;
-      padding: 14px 15px;
+      min-height: 48px;
+      border: 1px solid rgba(148,163,184,.34);
+      border-radius: 15px;
       outline: none;
-      background: rgba(255, 255, 255, .9);
+      padding: 0 14px;
       color: var(--text);
-      transition: border .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease);
+      background: rgba(255,255,255,.78);
+      transition: border-color .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
     }
 
-    .field-group input:focus {
-      border-color: rgba(39, 184, 166, .7);
-      box-shadow: 0 0 0 5px rgba(39, 184, 166, .12);
-      background: #fff;
+    .field-group textarea { min-height: 92px; resize: vertical; padding-top: 12px; line-height: 1.55; }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: rgba(39,184,155,.62);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(39,184,155,.13);
     }
 
     .primary-button,
     .ghost-button,
-    .action-button {
-      border-radius: 14px;
+    .action-button,
+    .nav-link,
+    .compact-button {
+      border-radius: 15px;
       font-weight: 900;
-      transition: transform .16s var(--ease), box-shadow .16s var(--ease), background .16s var(--ease), color .16s var(--ease);
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
     }
 
     .primary-button {
       width: 100%;
-      padding: 15px 18px;
+      min-height: 50px;
       color: white;
       background: linear-gradient(135deg, var(--primary), var(--primary-2));
-      box-shadow: 0 16px 36px rgba(39, 184, 166, .24);
+      box-shadow: 0 18px 34px rgba(39,184,155,.25);
     }
 
-    .primary-button:not(:disabled):hover,
-    .ghost-button:not(:disabled):hover,
-    .action-button:not(:disabled):hover {
-      transform: translateY(-1px);
-    }
-
-    .primary-button:not(:disabled):active,
-    .ghost-button:not(:disabled):active,
-    .action-button:not(:disabled):active {
-      transform: translateY(0);
-    }
-
-    .auth-note,
-    .auth-error {
-      margin-top: 16px;
-      padding: 13px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .auth-note {
-      color: #0f766e;
-      background: rgba(204, 251, 241, .55);
-      border: 1px solid rgba(45, 212, 191, .28);
-    }
+    .primary-button:hover, .action-button:hover, .ghost-button:hover, .nav-link:hover, .compact-button:hover { transform: translateY(-1px); }
 
     .auth-error {
-      color: #b42318;
-      background: #fff1f2;
-      border: 1px solid rgba(251, 113, 133, .28);
+      margin-top: 14px;
+      padding: 12px 14px;
+      border: 1px solid rgba(238,79,102,.24);
+      border-radius: 15px;
+      color: #9f1239;
+      background: rgba(255, 241, 242, .86);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .site-footer {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: 10px 4px 4px;
+      text-align: center;
+      color: var(--subtle);
+      font-size: 12px;
+      letter-spacing: .02em;
+    }
+
+    .app-screen {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 18px;
     }
 
     .topbar-wrap {
       position: sticky;
-      top: 0;
-      z-index: 4;
-      padding: 14px 0 10px;
-      background: linear-gradient(to bottom, rgba(245, 248, 251, .88), rgba(245, 248, 251, 0));
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      top: 14px;
+      z-index: 20;
+      width: min(100%, var(--container));
+      margin: 0 auto;
     }
 
     .topbar {
-      width: min(100%, var(--container));
-      margin: 0 auto;
-      padding: 12px 14px 12px 18px;
-      border-radius: 20px;
-      display: flex;
+      border-radius: 24px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 12px;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      background: rgba(255,255,255,.78);
     }
 
-    .top-left {
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .top-left { min-width: 0; display: flex; align-items: center; gap: 12px; }
 
     .mini-logo {
-      flex: none;
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      font-size: 20px;
+      flex: 0 0 auto;
     }
 
     .app-name {
       margin: 0;
-      font-size: 16px;
-      line-height: 1.1;
+      font-size: 18px;
+      letter-spacing: -.03em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .user-email {
       display: block;
-      max-width: 48vw;
-      margin-top: 4px;
-      overflow: hidden;
+      margin-top: 2px;
       color: var(--muted);
       font-size: 12px;
+      overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      max-width: 360px;
     }
 
-    .top-actions {
+    .top-nav {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 7px;
+      padding: 5px;
+      border-radius: 18px;
+      background: rgba(226,232,240,.52);
     }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      color: #475569;
+      text-decoration: none;
+      font-size: 13px;
+      background: transparent;
+    }
+
+    .nav-link:hover { color: #0f766e; background: rgba(255,255,255,.78); box-shadow: 0 8px 20px rgba(31,46,70,.08); }
+
+    .top-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 
     .sync-badge {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      padding: 9px 12px;
+      min-height: 36px;
+      padding: 0 12px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, .24);
-      background: rgba(255, 255, 255, .78);
       color: #0f766e;
-      font-size: 13px;
-      font-weight: 800;
+      background: rgba(236, 253, 245, .9);
+      border: 1px solid rgba(20,184,166,.18);
+      font-size: 12px;
+      font-weight: 850;
       white-space: nowrap;
     }
 
     .sync-badge::before {
       content: "";
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 0 5px rgba(39, 184, 166, .13);
+      background: #10b981;
+      box-shadow: 0 0 0 4px rgba(16,185,129,.12);
     }
 
-    .sync-badge.is-saving {
-      color: #92400e;
-    }
-
-    .sync-badge.is-saving::before {
-      background: var(--warning);
-      box-shadow: 0 0 0 5px rgba(245, 158, 11, .13);
-    }
-
-    .sync-badge.is-error {
-      color: #b42318;
-    }
-
-    .sync-badge.is-error::before {
-      background: var(--danger);
-      box-shadow: 0 0 0 5px rgba(255, 94, 108, .13);
-    }
+    .sync-badge.is-saving { color: #9a5b00; background: rgba(255,251,235,.94); border-color: rgba(245,158,11,.20); }
+    .sync-badge.is-saving::before { background: #f59e0b; }
+    .sync-badge.is-error { color: #be123c; background: rgba(255,241,242,.94); border-color: rgba(238,79,102,.22); }
+    .sync-badge.is-error::before { background: var(--danger); }
 
     .ghost-button {
-      padding: 10px 14px;
-      color: #334155;
-      background: rgba(255, 255, 255, .82);
-      border: 1px solid rgba(148, 163, 184, .28);
+      min-height: 36px;
+      padding: 0 13px;
+      color: #475569;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(148,163,184,.26);
+      white-space: nowrap;
     }
 
+    .ghost-button:hover { color: #0f172a; background: white; box-shadow: 0 10px 26px rgba(31,46,70,.08); }
+
     .container {
+      flex: 1;
       width: min(100%, var(--container));
-      margin: 0 auto;
-      padding: 22px 0 54px;
+      margin: 18px auto 0;
+      display: grid;
+      gap: 18px;
+      align-content: start;
     }
 
     .hero {
       position: relative;
       overflow: hidden;
-      border-radius: var(--radius-lg);
-      padding: clamp(24px, 4vw, 40px);
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-xl);
+      padding: clamp(22px, 4vw, 36px);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.86), rgba(255,255,255,.62)),
+        radial-gradient(circle at 96% 10%, rgba(75,194,255,.28), transparent 32%),
+        radial-gradient(circle at 20% 95%, rgba(39,184,155,.24), transparent 28%);
     }
 
     .hero::after {
       content: "";
       position: absolute;
-      right: -80px;
-      top: -100px;
-      width: 260px;
-      height: 260px;
+      right: -95px;
+      top: -110px;
+      width: 320px;
+      height: 320px;
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(39, 184, 166, .26), rgba(79, 140, 255, .22));
+      background: linear-gradient(135deg, rgba(75,194,255,.30), rgba(153,171,247,.22));
+      filter: blur(3px);
       pointer-events: none;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      margin-bottom: 16px;
-      border-radius: 999px;
-      color: #0f766e;
-      font-size: 13px;
-      font-weight: 900;
-      background: rgba(204, 251, 241, .64);
-      border: 1px solid rgba(45, 212, 191, .26);
-    }
-
-    .hero h1 {
-      max-width: 760px;
-      margin: 0 0 12px;
-      font-size: clamp(30px, 5vw, 50px);
-      line-height: 1.05;
-      letter-spacing: -.06em;
-    }
-
-    .hero p {
-      max-width: 760px;
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .stats-grid {
+    .hero-inner {
+      position: relative;
+      z-index: 1;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 26px;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      gap: 22px;
+      align-items: end;
     }
+
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: #0f766e; font-size: 13px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .hero h1 { margin: 13px 0 10px; max-width: 760px; font-size: clamp(34px, 4.7vw, 62px); line-height: 1.06; letter-spacing: -.065em; }
+    .hero p { max-width: 680px; margin: 0; color: var(--muted); line-height: 1.75; font-size: 15px; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
     .stat-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148,163,184,.22);
+      border-radius: 22px;
       padding: 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(148, 163, 184, .22);
-      background: rgba(255, 255, 255, .72);
+      background: rgba(255,255,255,.78);
+      box-shadow: 0 12px 30px rgba(31,46,70,.07);
     }
 
-    .stat-label {
-      display: block;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .stat-value {
-      display: block;
-      margin-top: 8px;
-      font-size: 28px;
-      font-weight: 950;
-      letter-spacing: -.04em;
-    }
-
-    .rule-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 20px 0;
-    }
-
-    .rule-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 13px;
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      right: -34px;
+      bottom: -42px;
+      width: 110px;
+      height: 110px;
       border-radius: 999px;
-      color: #475569;
-      font-size: 13px;
-      font-weight: 800;
-      background: rgba(255, 255, 255, .62);
-      border: 1px solid rgba(148, 163, 184, .24);
+      background: rgba(39,184,155,.12);
     }
+
+    .stat-label { position: relative; z-index: 1; display: block; color: var(--muted); font-size: 12px; font-weight: 900; }
+    .stat-value { position: relative; z-index: 1; display: block; margin-top: 6px; color: #0f172a; font-size: 34px; font-weight: 950; letter-spacing: -.04em; }
 
     .pool-section {
-      margin-top: 20px;
+      border-radius: var(--radius-xl);
+      padding: clamp(16px, 2.6vw, 24px);
+      background: rgba(255,255,255,.70);
+      scroll-margin-top: 110px;
     }
 
-    .section-header {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 14px;
-      margin: 0 0 14px;
-    }
+    .section-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+    .section-header h2 { margin: 0; font-size: clamp(22px, 2.4vw, 30px); letter-spacing: -.04em; }
+    .section-header p { margin: 7px 0 0; color: var(--muted); line-height: 1.65; font-size: 14px; }
 
-    .section-header h2 {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: -.04em;
-    }
+    .section-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 
-    .section-header p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .section-count {
-      flex: none;
-      color: var(--muted);
+    .section-count,
+    .select-wrap,
+    .compact-button {
+      min-height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.24);
+      background: rgba(255,255,255,.76);
+      color: #475569;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(218px, 1fr));
-      gap: 14px;
-    }
+    .section-count { display: inline-flex; align-items: center; white-space: nowrap; padding: 0 13px; }
+    .select-wrap { position: relative; overflow: hidden; padding: 0 12px; display: inline-flex; align-items: center; }
+    .select-wrap select { width: 180px; border: 0; outline: none; background: transparent; color: #334155; font-weight: 900; min-height: 36px; cursor: pointer; }
+    .compact-button { padding: 0 13px; }
 
-    .world-grid {
-      grid-template-columns: 1fr;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+    .type-grid { grid-template-columns: repeat(auto-fit, minmax(156px, 1fr)); }
+    .world-grid { grid-template-columns: minmax(0, 1fr); }
 
     .count-card {
       position: relative;
       overflow: hidden;
-      border-radius: var(--radius-md);
-      padding: 17px;
+      border-radius: 24px;
+      padding: 15px;
+      background: rgba(255,255,255,.82);
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease);
+    }
+
+    .count-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: rgba(39,184,155,.24); }
+
+    .count-card.world-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+      gap: 18px;
+      align-items: center;
+      padding: clamp(20px, 3vw, 28px);
       background:
-        radial-gradient(circle at 92% 0%, rgba(39, 184, 166, .11), transparent 34%),
-        linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .7));
-      transition: transform .18s var(--ease), box-shadow .18s var(--ease), border .18s var(--ease);
+        radial-gradient(circle at 95% 10%, rgba(75,194,255,.22), transparent 34%),
+        linear-gradient(135deg, rgba(255,255,255,.90), rgba(255,255,255,.70));
     }
 
-    .count-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(39, 184, 166, .34);
-      box-shadow: 0 20px 52px rgba(31, 41, 55, .12);
-    }
-
-
-    .type-card,
-    .family-card {
-      display: flex;
-      min-height: 352px;
-      flex-direction: column;
-      gap: 13px;
-    }
-
-    .type-card {
-      min-height: 334px;
-    }
-
-    .media-frame {
-      position: relative;
+    .world-visual {
+      width: 76px;
+      height: 76px;
+      border-radius: 26px;
       display: grid;
       place-items: center;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
-      flex: none;
-      border-radius: 24px;
-      border: 1px solid rgba(148, 163, 184, .24);
+      color: white;
+      font-size: 32px;
+      font-weight: 950;
+      background: linear-gradient(135deg, #172033, #27b89b 54%, #4bc2ff);
+      box-shadow: 0 20px 46px rgba(39,184,155,.26);
+    }
+
+    .world-main { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .card-kicker { display: block; color: var(--muted); font-size: 12px; font-weight: 900; }
+    .card-title { margin: 4px 0 0; color: var(--text); font-size: 18px; font-weight: 950; letter-spacing: -.025em; }
+    .count-number { margin-top: 11px; color: #111827; font-size: 42px; font-weight: 950; line-height: .98; letter-spacing: -.055em; }
+
+    .actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .world-card .actions { margin-top: 0; grid-template-columns: 1fr; }
+
+    .action-button { min-height: 38px; padding: 0 10px; color: #334155; background: rgba(241,245,249,.86); }
+    .action-button:hover { color: #0f172a; background: white; box-shadow: 0 10px 24px rgba(31,46,70,.08); }
+    .action-button.plus { color: white; background: linear-gradient(135deg, var(--primary), var(--primary-2)); box-shadow: 0 12px 28px rgba(39,184,155,.18); }
+    .action-button.minus { color: #2563eb; }
+    .action-button.clear { color: #be123c; background: rgba(255,241,242,.88); }
+    .action-button.clear:hover { color: white; background: linear-gradient(135deg, var(--danger), var(--danger-2)); }
+
+    .type-card {
+      color: var(--ink-on-dark);
+      border-color: rgba(255,255,255,.30);
       background:
-        radial-gradient(circle at 26% 18%, rgba(255, 255, 255, .96), transparent 26%),
-        conic-gradient(from 145deg at 50% 50%,
-          rgba(204, 251, 241, .86),
-          rgba(219, 234, 254, .84),
-          rgba(245, 243, 255, .82),
-          rgba(236, 253, 245, .86),
-          rgba(204, 251, 241, .86));
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, .76),
-        0 16px 34px rgba(15, 23, 42, .08);
-      isolation: isolate;
+        radial-gradient(circle at 14% 12%, rgba(255,255,255,.36), transparent 26%),
+        radial-gradient(circle at 94% 8%, rgba(255,255,255,.22), transparent 34%),
+        linear-gradient(135deg, rgba(var(--type-rgb), .98), rgba(var(--type-rgb), .70));
+      box-shadow: 0 18px 44px rgba(var(--type-rgb), .22), 0 10px 24px rgba(31,46,70,.08);
     }
 
-    .media-frame::before {
-      content: "";
-      position: absolute;
-      inset: 17%;
-      border-radius: 999px;
-      background: linear-gradient(135deg, rgba(39, 184, 166, .35), rgba(79, 140, 255, .25));
-      filter: blur(20px);
-      opacity: .86;
-      z-index: -1;
-    }
-
-    .media-frame::after {
+    .type-card::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, .48), transparent 38%),
-        radial-gradient(circle at 78% 84%, rgba(255, 255, 255, .50), transparent 24%);
+      background: linear-gradient(135deg, rgba(255,255,255,.18), transparent 36%), linear-gradient(to bottom, transparent, rgba(0,0,0,.16));
       pointer-events: none;
     }
 
-    .media-frame.is-missing::before {
-      opacity: .38;
+    .type-card::after {
+      content: "";
+      position: absolute;
+      right: -36px;
+      bottom: -36px;
+      width: 118px;
+      height: 118px;
+      border: 1px solid rgba(248,239,224,.24);
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      pointer-events: none;
     }
 
-    .card-image {
+    .type-card > * { position: relative; z-index: 1; }
+    .type-card .card-title, .type-card .count-number { color: #f8efe0; text-shadow: 0 2px 16px rgba(0,0,0,.20); }
+    .type-card .card-kicker { color: rgba(248,239,224,.78); }
+    .type-card .actions .action-button { color: rgba(248,239,224,.92); background: rgba(255,255,255,.16); border: 1px solid rgba(248,239,224,.20); backdrop-filter: blur(10px); }
+    .type-card .actions .action-button:hover { color: #172033; background: rgba(255,255,255,.88); }
+    .type-card .actions .plus { color: #172033; background: rgba(255,255,255,.92); box-shadow: 0 12px 28px rgba(0,0,0,.10); }
+    .type-card .actions .clear:hover { color: white; background: rgba(190,18,60,.86); }
+
+    .pet-card { display: grid; gap: 12px; }
+
+    .pet-art {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 26% 18%, rgba(255,255,255,.90), transparent 26%),
+        radial-gradient(circle at 80% 76%, rgba(75,194,255,.20), transparent 30%),
+        linear-gradient(145deg, rgba(39,184,155,.16), rgba(153,171,247,.18));
+      border: 1px solid rgba(148,163,184,.20);
+    }
+
+    .pet-art::before {
+      content: "";
+      position: absolute;
+      inset: 10%;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,255,255,.72), transparent 64%);
+      filter: blur(12px);
+      opacity: .85;
+    }
+
+    .pet-art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(255,255,255,.24), transparent 38%), linear-gradient(to top, rgba(12,18,32,.08), transparent 38%);
+      pointer-events: none;
+    }
+
+    .pet-art img {
       position: relative;
       z-index: 1;
-      display: block;
-      width: 82%;
-      height: 82%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      user-select: none;
-      pointer-events: none;
-      -webkit-user-drag: none;
-      filter: drop-shadow(0 16px 18px rgba(15, 23, 42, .16));
-      transform: translateZ(0);
+      padding: 7%;
+      filter: drop-shadow(0 14px 22px rgba(31,46,70,.18));
     }
 
-    .pet-image {
-      width: 88%;
-      height: 88%;
-    }
-
-    .type-image {
-      width: 58%;
-      height: 58%;
-    }
-
-    .card-body {
-      display: flex;
-      flex: 1;
-      min-height: 0;
-      flex-direction: column;
-    }
-
-    .type-card .actions,
-    .family-card .actions {
-      margin-top: auto;
-    }
-
-    .tag-icon {
-      width: 16px;
-      height: 16px;
-      object-fit: contain;
-      flex: none;
-      filter: drop-shadow(0 4px 6px rgba(15, 23, 42, .10));
-    }
-
-    .world-card {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 18px;
-      align-items: center;
-      padding: 24px;
-      background:
-        radial-gradient(circle at 92% 16%, rgba(79, 140, 255, .20), transparent 36%),
-        linear-gradient(135deg, rgba(255,255,255,.92), rgba(255,255,255,.72));
-    }
-
-    .card-kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      width: fit-content;
-      padding: 6px 9px;
-      border-radius: 999px;
-      color: #0f766e;
-      font-size: 12px;
-      font-weight: 950;
-      background: rgba(204, 251, 241, .62);
-      border: 1px solid rgba(45, 212, 191, .22);
-    }
-
-    .card-title {
-      margin: 12px 0 2px;
-      font-size: 18px;
-      line-height: 1.25;
-      letter-spacing: -.03em;
-    }
-
-    .card-subtitle {
-      min-height: 22px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .type-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-      min-height: 28px;
-    }
+    .pet-topline { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .type-tags { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-height: 24px; justify-content: flex-end; }
 
     .type-tag {
+      --tag-rgb: 39,184,155;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 8px;
+      min-height: 24px;
+      padding: 0 8px;
       border-radius: 999px;
-      color: #475569;
-      background: rgba(241, 245, 249, .86);
-      border: 1px solid rgba(148, 163, 184, .22);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .count-row {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .count-number {
-      font-size: 38px;
-      line-height: 1;
+      color: #f8efe0;
+      background: linear-gradient(135deg, rgba(var(--tag-rgb), .95), rgba(var(--tag-rgb), .68));
+      box-shadow: 0 8px 18px rgba(var(--tag-rgb), .18);
+      font-size: 11px;
       font-weight: 950;
-      letter-spacing: -.06em;
-      color: #101827;
+      text-shadow: 0 1px 8px rgba(0,0,0,.18);
     }
 
-    .count-unit {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 800;
-    }
+    .season-list { display: grid; gap: 16px; }
 
-    .world-card .count-number {
-      font-size: clamp(54px, 10vw, 84px);
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary-2));
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
+    .season-panel { overflow: hidden; border-radius: var(--radius-xl); background: rgba(255,255,255,.68); }
+    .season-panel[hidden] { display: none; }
 
-    .actions {
+    .season-summary {
+      list-style: none;
+      cursor: pointer;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin-top: 16px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(20,32,51,.92), rgba(31,46,70,.78)), radial-gradient(circle at 12% 0%, rgba(75,194,255,.34), transparent 30%);
+      color: white;
     }
 
-    .world-card .actions {
-      grid-template-columns: 1fr;
-      min-width: 150px;
-      margin-top: 0;
+    .season-summary::-webkit-details-marker { display: none; }
+    .season-title-wrap { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+    .season-index {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: #101624;
+      background: linear-gradient(135deg, #f8efe0, #99abf7);
+      font-weight: 950;
     }
 
-    .action-button {
-      padding: 10px 10px;
-      color: #334155;
-      background: rgba(241, 245, 249, .82);
-      border: 1px solid rgba(148, 163, 184, .24);
+    .season-summary h3 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+    .season-meta { display: block; margin-top: 3px; color: rgba(248,239,224,.72); font-size: 12px; font-weight: 800; }
+
+    .season-toggle { display: inline-flex; align-items: center; gap: 8px; color: rgba(248,239,224,.85); font-size: 12px; font-weight: 900; white-space: nowrap; }
+    .season-toggle::after { content: ""; width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .18s var(--ease); }
+    .season-panel[open] .season-toggle::after { transform: rotate(-135deg) translateY(-1px); }
+
+    .season-content { padding: 16px; display: grid; gap: 16px; }
+
+    .season-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr);
+      gap: 16px;
+      align-items: stretch;
     }
 
-    .action-button.plus {
-      color: #067a68;
-      background: rgba(204, 251, 241, .72);
-      border-color: rgba(45, 212, 191, .28);
+    .season-media {
+      position: relative;
+      overflow: hidden;
+      min-height: 238px;
+      aspect-ratio: 16 / 7;
+      border-radius: 26px;
+      background: radial-gradient(circle at 18% 14%, rgba(75,194,255,.22), transparent 28%), linear-gradient(135deg, #0f172a, #1f2e46 58%, #101624);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 22px 54px rgba(15,23,42,.24);
     }
 
-    .action-button.minus {
-      color: #315a8a;
-      background: rgba(219, 234, 254, .72);
-      border-color: rgba(96, 165, 250, .25);
-    }
-
-    .action-button.clear {
-      color: #b42318;
-      background: var(--danger-soft);
-      border-color: rgba(251, 113, 133, .26);
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 22px;
-      z-index: 10;
-      max-width: min(420px, calc(100vw - 32px));
-      padding: 12px 15px;
-      border-radius: 999px;
-      color: #0f172a;
-      background: rgba(255, 255, 255, .92);
-      border: 1px solid rgba(148, 163, 184, .28);
-      box-shadow: 0 16px 46px rgba(15, 23, 42, .16);
-      opacity: 0;
-      transform: translate(-50%, 14px);
-      pointer-events: none;
-      transition: opacity .18s var(--ease), transform .18s var(--ease);
-      font-size: 14px;
-      font-weight: 800;
-      text-align: center;
-    }
-
-    .toast.is-visible {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
-
-    @media (max-width: 860px) {
-      .screen {
-        padding: 14px;
-      }
-
-      .auth-shell {
-        grid-template-columns: 1fr;
-      }
-
-      .brand-panel {
-        min-height: auto;
-        padding: 28px;
-      }
-
-      .auth-card {
-        padding: 24px;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .world-card {
-        grid-template-columns: 1fr;
-      }
-
-      .world-card .actions {
-        min-width: 0;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .top-actions {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .sync-badge {
-        flex: 1;
-        justify-content: center;
-      }
-
-      .ghost-button {
-        flex: none;
-      }
-
-      .container {
-        padding-top: 14px;
-      }
-
-      .hero {
-        padding: 22px;
-      }
-
-      .section-header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .section-count {
-        width: 100%;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .type-card,
-      .family-card {
-        min-height: auto;
-        gap: 10px;
-      }
-
-      .media-frame {
-        border-radius: 18px;
-      }
-
-      .card-image {
-        width: 84%;
-        height: 84%;
-      }
-
-      .type-image {
-        width: 54%;
-        height: 54%;
-      }
-
-      .count-card {
-        padding: 13px;
-        border-radius: 17px;
-      }
-
-      .card-title {
-        font-size: 16px;
-      }
-
-      .count-number {
-        font-size: 32px;
-      }
-
-      .actions {
-        gap: 6px;
-      }
-
-      .action-button {
-        padding: 9px 6px;
-        font-size: 13px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <section id="authView" class="screen auth-screen">
-    <div class="auth-shell">
-      <div class="brand-panel">
-        <div>
-          <div class="brand-mark">洛</div>
-          <h1 class="brand-title">异色精灵<br><span>保底进度</span></h1>
-          <p class="brand-text">用于记录家族池、系别池与世界池的联动进度。邮箱密码登录后，手机、iPad 与电脑会通过 Firestore 自动同步同一账号的数据。</p>
-        </div>
-      </div>
-
-      <div class="auth-card">
-        <h2 id="authTitle">登录账号</h2>
-        <p id="authDescription">登录后会从 Firestore 读取你的保底数据，并持续监听其他设备的更新。</p>
-
-        <div class="mode-switch" role="tablist" aria-label="登录或注册">
-          <button class="mode-button is-active" type="button" data-auth-mode="login">登录</button>
-          <button class="mode-button" type="button" data-auth-mode="register">注册</button>
-        </div>
-
-        <form id="authForm" autocomplete="on">
-          <div class="field-group">
-            <label for="emailInput">邮箱</label>
-            <input id="emailInput" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
-          </div>
-          <div class="field-group">
-            <label for="passwordInput">密码</label>
-            <input id="passwordInput" name="password" type="password" placeholder="至少 6 位" autocomplete="current-password" minlength="6" required />
-          </div>
-          <button id="authSubmit" class="primary-button" type="submit">登录</button>
-        </form>
-        <div id="authError" class="auth-error is-hidden" role="alert"></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="appView" class="screen app-screen is-hidden">
-    <div class="topbar-wrap">
-      <header class="topbar">
-        <div class="top-left">
-          <div class="mini-logo">洛</div>
-          <div>
-            <h2 class="app-name">洛克王国异色保底</h2>
-            <span id="userEmail" class="user-email"></span>
-          </div>
-        </div>
-        <div class="top-actions">
-          <span id="syncStatus" class="sync-badge">已同步</span>
-          <button id="logoutButton" class="ghost-button" type="button">退出</button>
-        </div>
-      </header>
-    </div>
-
-    <main class="container">
-      <section class="panel hero">
-        <span class="eyebrow"><span class="dot"></span> 三池联动统计面板</span>
-        <h1>异色保底进度总览</h1>
-        <div class="stats-grid" aria-label="统计概览">
-          <div class="stat-card">
-            <span class="stat-label">世界池总计</span>
-            <span id="summaryWorld" class="stat-value">0</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-label">系别池合计</span>
-            <span id="summaryTypes" class="stat-value">0</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-label">家族池合计</span>
-            <span id="summaryFamily" class="stat-value">0</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="pool-section" aria-labelledby="worldTitle">
-        <div class="section-header">
-          <div>
-            <h2 id="worldTitle">世界池</h2>
-          </div>
-          <span class="section-count">1 项</span>
-        </div>
-        <div id="worldGrid" class="grid world-grid"></div>
-      </section>
-
-      <section class="pool-section" aria-labelledby="typeTitle">
-        <div class="section-header">
-          <div>
-            <h2 id="typeTitle">系别池</h2>
-          </div>
-          <span id="typeCountText" class="section-count">0 项</span>
-        </div>
-        <div id="typeGrid" class="grid"></div>
-      </section>
-
-      <section class="pool-section" aria-labelledby="familyTitle">
-        <div class="section-header">
-          <div>
-            <h2 id="familyTitle">家族池</h2>
-          </div>
-          <span id="familyCountText" class="section-count">0 项</span>
-        </div>
-        <div id="familyGrid" class="grid"></div>
-      </section>
-    </main>
-  </section>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      onSnapshot,
-      runTransaction,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyBv6o4ksuLGIix5iMoEi75QJsY1X9wfhJc",
-      authDomain: "roco-771b3.firebaseapp.com",
-      projectId: "roco-771b3",
-      storageBucket: "roco-771b3.firebasestorage.app",
-      messagingSenderId: "179088591818",
-      appId: "1:179088591818:web:f323e691d26219793e5d33",
-      measurementId: "G-7823QFY2HR"
-    };
-
-    // 第一部分：数据结构与精灵定义
-    const allTypes = ['普通', '草', '火', '水', '光', '地', '冰', '龙', '电', '毒', '虫', '武', '翼', '萌', '幽', '恶', '机械', '幻'];
-
-    const familyPets = [
-      { name: '柴渣虫', types: ['火', '草'] },
-      { name: '双灯鱼', types: ['水', '电'] },
-      { name: '月牙雪熊', types: ['冰', '幻'] },
-      { name: '粉粉星', types: ['电', '幻'] },
-      { name: '粉星仔', types: ['幻'] },
-      { name: '贝瑟', types: ['火', '机械'] },
-      { name: '嗜光嗡嗡', types: ['光', '恶'] },
-      { name: '空空颅', types: ['幽'] },
-      { name: '格兰种子', types: ['草'] },
-      { name: '奇丽草', types: ['草'] },
-      { name: '治愈兔', types: ['火', '萌'] },
-      { name: '火红尾', types: ['火'] },
-      { name: '绒绒', types: ['光', '虫'] },
-      { name: '犀角鸟', types: ['光'] },
-      { name: '呼呼猪', types: ['冰', '地'] },
-      { name: '机械方方', types: ['机械'] },
-      { name: '恶魔狼', types: ['恶'] },
-      { name: '拉特', types: ['电'] },
-      { name: '大耳帽兜', types: ['冰', '萌'] }
-    ];
-
-    const typeAssetSlugs = {
-      '普通': 'putong',
-      '草': 'cao',
-      '火': 'huo',
-      '水': 'shui',
-      '光': 'guang',
-      '地': 'di',
-      '冰': 'bing',
-      '龙': 'long',
-      '电': 'dian',
-      '毒': 'du',
-      '虫': 'chong',
-      '武': 'wu',
-      '翼': 'yi',
-      '萌': 'meng',
-      '幽': 'you',
-      '恶': 'e',
-      '机械': 'jixie',
-      '幻': 'huan'
-    };
-
-    const petAssetSlugs = {
-      '柴渣虫': 'chaizhachong',
-      '双灯鱼': 'shuangdengyu',
-      '月牙雪熊': 'yueyaxuexiong',
-      '粉粉星': 'fenfenxing',
-      '粉星仔': 'fenxingzai',
-      '贝瑟': 'beise',
-      '嗜光嗡嗡': 'shiguangwengweng',
-      '空空颅': 'kongkonglu',
-      '格兰种子': 'gelanzhongzi',
-      '奇丽草': 'qilicao',
-      '治愈兔': 'zhiyutu',
-      '火红尾': 'huohongwei',
-      '绒绒': 'rongrong',
-      '犀角鸟': 'xijiaoniao',
-      '呼呼猪': 'huhuzhu',
-      '机械方方': 'jixiefangfang',
-      '恶魔狼': 'emolang',
-      '拉特': 'late',
-      '大耳帽兜': 'daermaodou'
-    };
-
-    const typeIndexMap = new Map(allTypes.map((type, index) => [type, index]));
-    const familyIndexMap = new Map(familyPets.map((pet, index) => [pet.name, index]));
-    const familyPetMap = new Map(familyPets.map(pet => [pet.name, pet]));
-    const nf = new Intl.NumberFormat('zh-CN');
-
-    const els = {
-      authView: document.getElementById('authView'),
-      appView: document.getElementById('appView'),
-      authForm: document.getElementById('authForm'),
-      authTitle: document.getElementById('authTitle'),
-      authDescription: document.getElementById('authDescription'),
-      authSubmit: document.getElementById('authSubmit'),
-      authError: document.getElementById('authError'),
-      emailInput: document.getElementById('emailInput'),
-      passwordInput: document.getElementById('passwordInput'),
-      userEmail: document.getElementById('userEmail'),
-      logoutButton: document.getElementById('logoutButton'),
-      syncStatus: document.getElementById('syncStatus'),
-      summaryWorld: document.getElementById('summaryWorld'),
-      summaryTypes: document.getElementById('summaryTypes'),
-      summaryFamily: document.getElementById('summaryFamily'),
-      worldGrid: document.getElementById('worldGrid'),
-      typeGrid: document.getElementById('typeGrid'),
-      familyGrid: document.getElementById('familyGrid'),
-      typeCountText: document.getElementById('typeCountText'),
-      familyCountText: document.getElementById('familyCountText'),
-      toast: document.getElementById('toast')
-    };
-
-    let app = null;
-    let auth = null;
-    let db = null;
-    let authMode = 'login';
-    let currentUser = null;
-    let currentState = createDefaultData('');
-    let unsubscribeProgress = null;
-    let writeQueue = Promise.resolve();
-    let pendingWrites = 0;
-    let toastTimer = null;
-
-    const isConfigReady = Object.values(firebaseConfig).every(value => {
-      return typeof value === 'string' && value.trim();
-    });
-
-    function clampCount(value) {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return 0;
-      return Math.max(0, Math.floor(n));
-    }
-
-    function formatCount(value) {
-      return nf.format(clampCount(value));
-    }
-
-    function createDefaultData(uid) {
-      return {
-        user_id: uid,
-        schemaVersion: 1,
-        typePools: Object.fromEntries(allTypes.map(type => [type, 0])),
-        familyPools: Object.fromEntries(familyPets.map(pet => [pet.name, 0])),
-        worldPool: 0
-      };
-    }
-
-    function normalizeData(raw = {}, uid = '') {
-      const data = createDefaultData(uid);
-      const rawTypePools = raw.typePools || {};
-      const rawFamilyPools = raw.familyPools || {};
-
-      for (const type of allTypes) {
-        data.typePools[type] = clampCount(rawTypePools[type]);
-      }
-
-      for (const pet of familyPets) {
-        data.familyPools[pet.name] = clampCount(rawFamilyPools[pet.name]);
-      }
-
-      data.worldPool = clampCount(raw.worldPool);
-      data.schemaVersion = 1;
-      return data;
-    }
-
-    function userDocRef(uid) {
-      return doc(db, 'users', uid);
-    }
-
-    function incrementField(object, key, delta) {
-      object[key] = clampCount((object[key] ?? 0) + delta);
-    }
-
-    function applyOperation(data, operation) {
-      const next = normalizeData(data, data.user_id || currentUser?.uid || '');
-      const { scope, key, action } = operation;
-
-      if (action === 'clear') {
-        if (scope === 'family' && familyIndexMap.has(key)) {
-          next.familyPools[key] = 0;
-        } else if (scope === 'type' && typeIndexMap.has(key)) {
-          next.typePools[key] = 0;
-        } else if (scope === 'world') {
-          next.worldPool = 0;
-        }
-        return next;
-      }
-
-      if (action !== 'inc' && action !== 'dec') return next;
-      const delta = action === 'inc' ? 1 : -1;
-
-      if (scope === 'family') {
-        const pet = familyPetMap.get(key);
-        if (!pet) return next;
-
-        // 场景 A：操作家族池精灵。自身、所有对应系别、世界池同步变化。
-        incrementField(next.familyPools, pet.name, delta);
-        for (const type of pet.types) {
-          if (typeIndexMap.has(type)) incrementField(next.typePools, type, delta);
-        }
-        next.worldPool = clampCount(next.worldPool + delta);
-        return next;
-      }
-
-      if (scope === 'type') {
-        if (!typeIndexMap.has(key)) return next;
-
-        // 场景 B：操作系别池。只向上影响世界池，不向下回溯家族池。
-        incrementField(next.typePools, key, delta);
-        next.worldPool = clampCount(next.worldPool + delta);
-        return next;
-      }
-
-      // 场景 C：世界池没有 +1 / -1，只有清空；这里故意不处理 inc/dec。
-      return next;
-    }
-
-    function buildCards() {
-      els.worldGrid.innerHTML = `
-        <article class="count-card world-card" data-scope="world" data-key="world">
-          <div>
-            <span class="card-kicker">全局总计</span>
-            <h3 class="card-title">世界池</h3>
-            <div class="card-subtitle">当前世界池进度</div>
-            <div class="count-row">
-              <span id="world-count" class="count-number">0</span>
-              <span class="count-unit">次</span>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="action-button clear" type="button" data-action="clear">清空</button>
-          </div>
-        </article>
-      `;
-
-      els.typeGrid.innerHTML = allTypes.map((type, index) => `
-        <article class="count-card type-card" data-scope="type" data-key="${escapeAttribute(type)}">
-          <div class="media-frame type-media">
-            <img class="card-image type-image" src="${escapeAttribute(getTypeImageSrc(type))}" alt="${escapeAttribute(type)}系 logo" loading="lazy" decoding="async" onerror="window.__handleAssetError(this)" />
-          </div>
-          <div class="card-body">
-            <span class="card-kicker">系别池</span>
-            <h3 class="card-title">${escapeHtml(type)}</h3>
-            <div class="card-subtitle">当前系别进度</div>
-            <div class="count-row">
-              <span id="type-count-${index}" class="count-number">0</span>
-              <span class="count-unit">次</span>
-            </div>
-            <div class="actions">
-              <button class="action-button plus" type="button" data-action="inc">+1</button>
-              <button class="action-button minus" type="button" data-action="dec">-1</button>
-              <button class="action-button clear" type="button" data-action="clear">清空</button>
-            </div>
-          </div>
-        </article>
-      `).join('');
-
-      els.familyGrid.innerHTML = familyPets.map((pet, index) => `
-        <article class="count-card family-card" data-scope="family" data-key="${escapeAttribute(pet.name)}">
-          <div class="media-frame pet-media">
-            <img class="card-image pet-image" src="${escapeAttribute(getPetImageSrc(pet.name))}" alt="${escapeAttribute(pet.name)}形象图" loading="lazy" decoding="async" onerror="window.__handleAssetError(this)" />
-          </div>
-          <div class="card-body">
-            <span class="card-kicker">家族池</span>
-            <h3 class="card-title">${escapeHtml(pet.name)}</h3>
-            <div class="type-tags">
-              ${pet.types.map(renderTypeTag).join('')}
-            </div>
-            <div class="count-row">
-              <span id="family-count-${index}" class="count-number">0</span>
-              <span class="count-unit">次</span>
-            </div>
-            <div class="actions">
-              <button class="action-button plus" type="button" data-action="inc">+1</button>
-              <button class="action-button minus" type="button" data-action="dec">-1</button>
-              <button class="action-button clear" type="button" data-action="clear">清空</button>
-            </div>
-          </div>
-        </article>
-      `).join('');
-
-      els.typeCountText.textContent = `${allTypes.length} 项`;
-      els.familyCountText.textContent = `${familyPets.length} 项`;
-    }
-
-    function render() {
-      const state = normalizeData(currentState, currentUser?.uid || '');
-
-      for (const [type, index] of typeIndexMap.entries()) {
-        const node = document.getElementById(`type-count-${index}`);
-        if (node) node.textContent = formatCount(state.typePools[type]);
-      }
-
-      for (const [petName, index] of familyIndexMap.entries()) {
-        const node = document.getElementById(`family-count-${index}`);
-        if (node) node.textContent = formatCount(state.familyPools[petName]);
-      }
-
-      const worldNode = document.getElementById('world-count');
-      if (worldNode) worldNode.textContent = formatCount(state.worldPool);
-
-      const typeTotal = allTypes.reduce((sum, type) => sum + clampCount(state.typePools[type]), 0);
-      const familyTotal = familyPets.reduce((sum, pet) => sum + clampCount(state.familyPools[pet.name]), 0);
-
-      els.summaryWorld.textContent = formatCount(state.worldPool);
-      els.summaryTypes.textContent = formatCount(typeTotal);
-      els.summaryFamily.textContent = formatCount(familyTotal);
-    }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
-    }
-
-    function escapeAttribute(value) {
-      return escapeHtml(value);
-    }
-
-    function assetPath(folder, slug) {
-      return `${folder}/${slug}.jpg`;
-    }
-
-    function getTypeImageSrc(type) {
-      return assetPath('type', typeAssetSlugs[type] || type);
-    }
-
-    function getPetImageSrc(petName) {
-      return assetPath('pet', petAssetSlugs[petName] || petName);
-    }
-
-    function handleImageFallback(image) {
-      const frame = image.closest('.media-frame');
-      if (frame) frame.classList.add('is-missing');
-      image.remove();
-    }
-
-    window.__handleAssetError = handleImageFallback;
-
-    function renderTypeTag(type) {
-      return `
-        <span class="type-tag">
-          <img class="tag-icon" src="${escapeAttribute(getTypeImageSrc(type))}" alt="" loading="lazy" decoding="async" onerror="this.remove();" />
-          ${escapeHtml(type)}
-        </span>
-      `;
-    }
-
-    function setAuthMode(mode) {
-      authMode = mode === 'register' ? 'register' : 'login';
-      document.querySelectorAll('[data-auth-mode]').forEach(button => {
-        button.classList.toggle('is-active', button.dataset.authMode === authMode);
-      });
-
-      if (authMode === 'register') {
-        els.authTitle.textContent = '注册账号';
-        els.authDescription.textContent = '创建邮箱密码账号后会自动登录，并为你初始化一份全新的保底数据。';
-        els.authSubmit.textContent = '注册并登录';
-        els.passwordInput.autocomplete = 'new-password';
-      } else {
-        els.authTitle.textContent = '登录账号';
-        els.authDescription.textContent = '登录后会从 Firestore 读取你的保底数据，并持续监听其他设备的更新。';
-        els.authSubmit.textContent = '登录';
-        els.passwordInput.autocomplete = 'current-password';
-      }
-
-      hideAuthError();
-    }
-
-    function showAuthError(message) {
-      els.authError.textContent = message;
-      els.authError.classList.remove('is-hidden');
-    }
-
-    function hideAuthError() {
-      els.authError.textContent = '';
-      els.authError.classList.add('is-hidden');
-    }
-
-    function showToast(message) {
-      window.clearTimeout(toastTimer);
-      els.toast.textContent = message;
-      els.toast.classList.add('is-visible');
-      toastTimer = window.setTimeout(() => {
-        els.toast.classList.remove('is-visible');
-      }, 2200);
-    }
-
-    function setSyncStatus(text, tone = 'ok') {
-      els.syncStatus.textContent = text;
-      els.syncStatus.classList.toggle('is-saving', tone === 'saving');
-      els.syncStatus.classList.toggle('is-error', tone === 'error');
-    }
-
-    function setAuthBusy(isBusy) {
-      els.authSubmit.disabled = isBusy || !isConfigReady;
-      els.emailInput.disabled = isBusy || !isConfigReady;
-      els.passwordInput.disabled = isBusy || !isConfigReady;
-      els.authSubmit.textContent = isBusy
-        ? (authMode === 'register' ? '注册中…' : '登录中…')
-        : (authMode === 'register' ? '注册并登录' : '登录');
-    }
-
-    function getAuthErrorMessage(error) {
-      const code = error?.code || '';
-      const messages = {
-        'auth/email-already-in-use': '该邮箱已经注册，请切换到登录。',
-        'auth/invalid-email': '邮箱格式不正确。',
-        'auth/weak-password': '密码强度不足，请至少使用 6 位密码。',
-        'auth/invalid-credential': '邮箱或密码不正确。',
-        'auth/user-disabled': '该账号已被禁用。',
-        'auth/too-many-requests': '尝试次数过多，请稍后再试。',
-        'auth/network-request-failed': '网络连接失败，请检查网络后重试。',
-        'auth/configuration-not-found': 'Firebase Auth 尚未正确配置，请检查项目配置并启用 Email/Password。'
-      };
-      return messages[code] || `操作失败：${error?.message || '未知错误'}`;
-    }
-
-    async function handleAuthSubmit(event) {
-      event.preventDefault();
-      hideAuthError();
-
-      if (!isConfigReady) {
-        showAuthError('请先在 firebaseConfig 中填入 Firebase Web 配置。');
-        return;
-      }
-
-      const email = els.emailInput.value.trim();
-      const password = els.passwordInput.value;
-
-      if (!email || !password) {
-        showAuthError('请输入邮箱和密码。');
-        return;
-      }
-
-      try {
-        setAuthBusy(true);
-        if (authMode === 'register') {
-          await createUserWithEmailAndPassword(auth, email, password);
-        } else {
-          await signInWithEmailAndPassword(auth, email, password);
-        }
-      } catch (error) {
-        showAuthError(getAuthErrorMessage(error));
-      } finally {
-        setAuthBusy(false);
-      }
-    }
-
-    function showAuthView() {
-      els.authView.classList.remove('is-hidden');
-      els.appView.classList.add('is-hidden');
-    }
-
-    function showAppView() {
-      els.authView.classList.add('is-hidden');
-      els.appView.classList.remove('is-hidden');
-    }
-
-    async function ensureUserDocument(uid) {
-      const ref = userDocRef(uid);
-
-      // 只在文档不存在时初始化，避免新用户刚点击 +1 时被异步初始化覆盖为 0。
-      await runTransaction(db, async (transaction) => {
-        const snapshot = await transaction.get(ref);
-        if (snapshot.exists()) return;
-
-        transaction.set(ref, {
-          ...createDefaultData(uid),
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
-      });
-    }
-
-    function startProgressListener(user) {
-      if (unsubscribeProgress) unsubscribeProgress();
-      setSyncStatus('同步中…', 'saving');
-
-      const ref = userDocRef(user.uid);
-      unsubscribeProgress = onSnapshot(ref, async (snapshot) => {
-        try {
-          if (!snapshot.exists()) {
-            await ensureUserDocument(user.uid);
-            return;
-          }
-
-          currentState = normalizeData(snapshot.data(), user.uid);
-          render();
-          if (pendingWrites === 0) setSyncStatus('已同步');
-        } catch (error) {
-          console.error(error);
-          setSyncStatus('同步失败', 'error');
-          showToast('同步失败，请检查 Firestore 权限规则。');
-        }
-      }, (error) => {
-        console.error(error);
-        setSyncStatus('同步失败', 'error');
-        showToast('无法监听数据变化，请检查 Firestore 规则。');
-      });
-    }
-
-    async function persistOperation(operation) {
-      if (!currentUser || !db) {
-        showToast('请先登录。');
-        return;
-      }
-
-      const uid = currentUser.uid;
-
-      // 本地先渲染，手感更即时；随后用事务写入 Firestore，避免多设备同时点击造成覆盖。
-      currentState = applyOperation(currentState, operation);
-      render();
-      pendingWrites += 1;
-      setSyncStatus('保存中…', 'saving');
-
-      let operationFailed = false;
-      writeQueue = writeQueue
-        .then(async () => {
-          const ref = userDocRef(uid);
-
-          await runTransaction(db, async (transaction) => {
-            const snapshot = await transaction.get(ref);
-            const fresh = snapshot.exists()
-              ? normalizeData(snapshot.data(), uid)
-              : createDefaultData(uid);
-            const next = applyOperation(fresh, operation);
-
-            const payload = {
-              ...next,
-              updatedAt: serverTimestamp()
-            };
-            if (!snapshot.exists()) payload.createdAt = serverTimestamp();
-
-            transaction.set(ref, payload, { merge: true });
-          });
-        })
-        .catch((error) => {
-          operationFailed = true;
-          console.error(error);
-          setSyncStatus('保存失败', 'error');
-          showToast('保存失败，请检查网络或 Firestore 权限规则。');
-        })
-        .finally(() => {
-          pendingWrites = Math.max(0, pendingWrites - 1);
-          if (pendingWrites === 0 && !operationFailed) setSyncStatus('已同步');
-        });
-
-      return writeQueue;
-    }
-
-    function getClearConfirmMessage(scope, key) {
-      if (scope === 'family') return `确定要清空【${key}】的进度吗？`;
-      if (scope === 'type') return `确定要清空【${key}】系别进度吗？`;
-      return '确定要清空【世界池】的进度吗？此操作不会影响系别池和家族池。';
-    }
-
-    function handlePoolAction(button) {
-      const card = button.closest('[data-scope]');
-      if (!card) return;
-
-      const scope = card.dataset.scope;
-      const key = card.dataset.key;
-      const action = button.dataset.action;
-
-      const validScope = scope === 'world' || scope === 'type' || scope === 'family';
-      if (!validScope) return;
-
-      if (scope === 'world' && action !== 'clear') return;
-      if (scope === 'type' && !typeIndexMap.has(key)) return;
-      if (scope === 'family' && !familyPetMap.has(key)) return;
-
-      if (action === 'clear') {
-        const ok = window.confirm(getClearConfirmMessage(scope, key));
-        if (!ok) return;
-      }
-
-      persistOperation({ scope, key, action });
-    }
-
-    function initFirebase() {
-      if (!isConfigReady) {
-        setAuthBusy(false);
-        showAuthError('Firebase 配置缺失，请检查 index.html 中的 firebaseConfig。');
-        return;
-      }
-
-      app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
-
-      onAuthStateChanged(auth, (user) => {
-        currentUser = user;
-
-        if (!user) {
-          if (unsubscribeProgress) unsubscribeProgress();
-          unsubscribeProgress = null;
-          currentState = createDefaultData('');
-          render();
-          showAuthView();
-          return;
-        }
-
-        els.userEmail.textContent = user.email || user.uid;
-        showAppView();
-        startProgressListener(user);
-      });
-    }
-
-    function initEvents() {
-      document.querySelectorAll('[data-auth-mode]').forEach(button => {
-        button.addEventListener('click', () => setAuthMode(button.dataset.authMode));
-      });
-
-      els.authForm.addEventListener('submit', handleAuthSubmit);
-
-      els.logoutButton.addEventListener('click', async () => {
-        try {
-          await signOut(auth);
-          showToast('已退出登录。');
-        } catch (error) {
-          console.error(error);
-          showToast('退出失败，请稍后重试。');
-        }
-      });
-
-      document.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-action]');
-        if (!button) return;
-        handlePoolAction(button);
-      });
-    }
-
-    buildCards();
-    render();
-    initEvents();
-    initFirebase();
-  </script>
-</body>
-</html>
+    .season-bg, .season-main { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .season-bg { object-fit: cover; transform: scale(1.08); filter: blur(18px) saturat
