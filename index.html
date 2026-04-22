@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#07111f" />
+<title>洛克王国异色精灵保底进度管理</title>
+<style>
+:root{color-scheme:dark;--text:#f6fbff;--deep:#07111f;--cream:#f8efe0;--muted:rgba(230,241,255,.68);--muted2:#64748b;--line:rgba(255,255,255,.18);--line2:rgba(255,255,255,.10);--panel:rgba(7,17,31,.58);--panel2:rgba(255,255,255,.10);--cyan:#4bc2ff;--green:#27b89b;--violet:#99abf7;--danger:#f05b70;--warn:#f5c452;--shadow:0 34px 110px rgba(2,8,23,.38);--shadow2:0 18px 54px rgba(2,8,23,.25);--r1:34px;--r2:26px;--r3:18px;--container:min(1480px,calc(100vw - 48px));--ease:cubic-bezier(.2,.8,.2,1);--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--seasonal-bg:url("pic/background.jpg");--page-bg-height:100vh}*{box-sizing:border-box}html{min-height:100%;scroll-behavior:smooth;background:#07111f;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}body{position:relative;min-height:100vh;margin:0;overflow-x:hidden;background:radial-gradient(circle at 20% 0%,rgba(75,194,255,.18),transparent 28%),radial-gradient(circle at 78% 6%,rgba(39,184,155,.14),transparent 32%),linear-gradient(135deg,#07111f 0%,#101826 46%,#0d1422 100%);isolation:isolate}body:before,body:after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none}body.is-auth:before{position:fixed;background-image:url("pic/login.jpg"),linear-gradient(135deg,#07111f,#101826);background-repeat:no-repeat;background-size:cover;background-position:center;filter:saturate(1.08) contrast(1.05) brightness(.9)}body.is-auth:after{position:fixed;z-index:-1;background:radial-gradient(circle at 18% 18%,rgba(75,194,255,.28),transparent 30%),radial-gradient(circle at 84% 82%,rgba(39,184,155,.22),transparent 36%),linear-gradient(135deg,rgba(2,6,23,.82),rgba(2,6,23,.52) 48%,rgba(2,6,23,.86))}body.is-app:before{top:0;right:0;left:auto;width:100%;height:var(--page-bg-height);min-height:100vh;background-image:var(--seasonal-bg),url("pic/background.jpg"),linear-gradient(135deg,#07111f,#101826);background-repeat:no-repeat,no-repeat,no-repeat;background-size:auto 100%,auto 100%,cover;background-position:right top,right top,center;filter:saturate(1.06) contrast(1.04) brightness(.86)}body.is-app:after{top:0;right:0;left:auto;z-index:-1;width:100%;height:var(--page-bg-height);min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.24),transparent 34%),radial-gradient(ellipse at 52% 38%,rgba(75,194,255,.12),transparent 45%),linear-gradient(90deg,rgba(2,6,23,.82),rgba(8,15,28,.66) 24%,rgba(8,15,28,.44) 54%,rgba(2,6,23,.62)),linear-gradient(180deg,rgba(2,6,23,.38),rgba(2,6,23,.24) 35%,rgba(2,6,23,.76))}::selection{background:rgba(75,194,255,.28)}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allowed;opacity:.58}img{display:block;max-width:100%}a{color:inherit;text-decoration:none}.is-hidden{display:none!important}:focus-visible{outline:3px solid rgba(75,194,255,.62);outline-offset:3px}.screen{position:relative;z-index:1;min-height:100vh;padding:max(20px,var(--safe-top)) 0 calc(22px + var(--safe-bottom))}.auth-screen{display:grid;grid-template-rows:1fr auto;gap:18px;padding-inline:20px}.auth-layout{width:min(1120px,100%);margin:auto;display:grid;grid-template-columns:minmax(0,1.06fr) minmax(360px,.82fr);gap:clamp(16px,3vw,28px);align-items:stretch}.glass,.auth-panel,.auth-card,.topbar,.hero,.world-card,.panel,.type-card,.pet-card,.record-form,.record-season,.site-footer{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.075));box-shadow:var(--shadow2);backdrop-filter:blur(24px) saturate(1.08);-webkit-backdrop-filter:blur(24px) saturate(1.08)}.auth-panel{position:relative;overflow:hidden;min-height:600px;border-radius:var(--r1);padding:clamp(30px,5vw,56px);color:#fff;isolation:isolate}.auth-panel:before,.auth-panel:after{content:"";position:absolute;pointer-events:none;z-index:-1}.auth-panel:before{inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 34%),radial-gradient(circle at 84% 14%,rgba(75,194,255,.36),transparent 30%),radial-gradient(circle at 16% 88%,rgba(39,184,155,.28),transparent 34%),repeating-linear-gradient(135deg,rgba(255,255,255,.055) 0 1px,transparent 1px 22px)}.auth-panel:after{right:-150px;bottom:-150px;width:440px;height:440px;border-radius:999px;background:radial-gradient(circle,rgba(75,194,255,.34),transparent 66%);filter:blur(2px)}.brand-mark,.mini-logo{display:grid;place-items:center;color:#06121f;font-weight:950;background:linear-gradient(135deg,#fff7df,#7ee7ff 48%,#a9b9ff);box-shadow:0 22px 62px rgba(75,194,255,.26)}.brand-mark{width:70px;height:70px;border-radius:24px;font-size:30px}.brand-title{max-width:680px;margin:34px 0 0;font-size:clamp(42px,7vw,76px);line-height:.98;letter-spacing:-.075em}.brand-title span,.hero-title-accent{color:transparent;background:linear-gradient(135deg,#fff7df,#8defff 50%,#acbbff);background-clip:text;-webkit-background-clip:text}.auth-metrics{position:absolute;left:clamp(30px,5vw,56px);right:clamp(30px,5vw,56px);bottom:clamp(30px,5vw,52px);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.auth-metric,.hero-metric,.season-metric{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}.auth-metric{border-radius:20px;padding:16px}.auth-metric strong,.hero-metric strong,.season-metric strong{display:block;color:#fff;font-size:clamp(24px,3vw,34px);line-height:1;letter-spacing:-.04em}.auth-metric span,.hero-metric span,.season-metric span{display:block;margin-top:8px;color:rgba(248,251,255,.70);font-size:12px;font-weight:900}.auth-card{border-radius:var(--r1);padding:clamp(24px,4vw,40px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,255,255,.78));color:#0f172a}.auth-card h2{margin:0 0 8px;font-size:32px;letter-spacing:-.045em}.auth-intro{margin:0 0 24px;color:#64748b;line-height:1.65}.mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px;margin-bottom:22px;border-radius:18px;background:rgba(226,232,240,.72)}.mode-button{min-height:42px;border-radius:14px;color:#64748b;background:transparent;font-weight:900;transition:all .18s var(--ease)}.mode-button.is-active{color:#062033;background:#fff;box-shadow:0 12px 28px rgba(15,23,42,.10)}.field{display:grid;gap:8px}.field+.field{margin-top:14px}.field label{color:#334155;font-size:13px;font-weight:900}input,select,textarea{width:100%;min-height:46px;border:1px solid rgba(148,163,184,.34);border-radius:15px;padding:12px 14px;color:#0f172a;background:rgba(255,255,255,.90);outline:none;transition:border .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}textarea{min-height:96px;resize:vertical;line-height:1.55}input:focus,select:focus,textarea:focus{border-color:rgba(75,194,255,.78);box-shadow:0 0 0 5px rgba(75,194,255,.14);background:#fff}.primary-button,.ghost-button,.action-button,.danger-button{border-radius:14px;font-weight:950;transition:transform .16s var(--ease),box-shadow .16s var(--ease),background .16s var(--ease),color .16s var(--ease),border-color .16s var(--ease)}.primary-button{width:100%;min-height:48px;margin-top:18px;color:#06121f;background:linear-gradient(135deg,#fff7df,#7ee7ff 52%,#9db1ff);box-shadow:0 16px 42px rgba(75,194,255,.22)}.primary-button:not(:disabled):hover,.ghost-button:not(:disabled):hover,.action-button:not(:disabled):hover,.danger-button:not(:disabled):hover{transform:translateY(-1px)}.status-message{min-height:22px;margin-top:14px;color:#0f766e;font-size:13px;line-height:1.55;font-weight:800}.status-message.is-error{color:#b42318}.app-screen{padding-inline:0}.app-shell{width:var(--container);margin:0 auto;display:grid;gap:18px;align-content:start}.topbar{position:sticky;top:max(12px,var(--safe-top));z-index:10;display:grid;grid-template-columns:minmax(250px,1fr) auto auto;gap:12px;align-items:center;border-radius:24px;padding:10px;background:rgba(7,17,31,.62);box-shadow:0 18px 60px rgba(2,8,23,.28)}.top-left{min-width:0;display:flex;align-items:center;gap:12px;padding-left:6px}.mini-logo{flex:none;width:42px;height:42px;border-radius:15px}.app-name{display:block;overflow:hidden;color:#fff;font-size:15px;font-weight:950;letter-spacing:-.02em;text-overflow:ellipsis;white-space:nowrap}.user-email{display:block;max-width:360px;margin-top:3px;overflow:hidden;color:rgba(229,241,255,.62);font-size:12px;font-weight:850;text-overflow:ellipsis;white-space:nowrap}.top-nav{min-width:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:5px;overflow-x:auto;border-radius:18px;background:rgba(255,255,255,.08);scrollbar-width:none}.top-nav::-webkit-scrollbar{display:none}.top-nav button{flex:0 0 auto;min-height:36px;padding:0 12px;color:rgba(248,251,255,.72);background:transparent;border-radius:13px;font-size:13px;font-weight:950;white-space:nowrap}.top-nav button:hover{color:#06121f;background:linear-gradient(135deg,#fff7df,#86e9ff);box-shadow:0 12px 28px rgba(75,194,255,.18)}.top-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px}.sync-badge{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;padding:0 12px;border-radius:999px;color:#b7ffee;background:rgba(16,185,129,.12);border:1px solid rgba(45,212,191,.22);font-size:12px;font-weight:950;white-space:nowrap}.sync-badge:before{content:"";width:8px;height:8px;border-radius:999px;background:#10b981;box-shadow:0 0 0 5px rgba(16,185,129,.14)}.sync-badge.is-saving{color:#ffe3a8;background:rgba(245,196,82,.12);border-color:rgba(245,196,82,.24)}.sync-badge.is-saving:before{background:var(--warn);box-shadow:0 0 0 5px rgba(245,196,82,.14)}.sync-badge.is-error{color:#ffd4dc;background:rgba(240,91,112,.12);border-color:rgba(240,91,112,.25)}.sync-badge.is-error:before{background:var(--danger);box-shadow:0 0 0 5px rgba(240,91,112,.15)}.ghost-button{min-height:36px;padding:0 12px;color:rgba(248,251,255,.78);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);white-space:nowrap}.ghost-button:hover{color:#06121f;background:rgba(255,255,255,.92)}
+.hero,.world-card,.panel{position:relative;overflow:hidden;border-radius:var(--r1)}.hero{min-height:clamp(208px,13.7vw,286px);aspect-ratio:4224/576;display:grid;align-items:end;padding:clamp(24px,4vw,44px);background:linear-gradient(100deg,rgba(2,6,23,.86),rgba(10,20,36,.62) 42%,rgba(9,15,28,.26)),linear-gradient(180deg,rgba(255,255,255,.12),transparent 42%),url("pic/main.jpg");background-size:cover;background-position:center;box-shadow:var(--shadow);isolation:isolate}.hero:before,.world-card:before,.panel:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.12),transparent 36%),radial-gradient(circle at 86% 16%,rgba(75,194,255,.16),transparent 28%)}.hero-content{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,430px);gap:clamp(18px,3vw,34px);align-items:end;width:100%}.hero h1{max-width:760px;margin:0;font-size:clamp(38px,5.6vw,76px);line-height:.98;letter-spacing:-.075em;text-shadow:0 18px 48px rgba(0,0,0,.28)}.hero-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.hero-metric{border-radius:18px;padding:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.world-card{min-height:clamp(190px,13.9vw,284px);aspect-ratio:4174/582;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(18px,4vw,44px);align-items:center;padding:clamp(24px,4vw,44px);color:#fff;background:radial-gradient(circle at 86% 16%,rgba(75,194,255,.28),transparent 34%),linear-gradient(95deg,rgba(2,6,23,.86),rgba(6,14,26,.54) 48%,rgba(2,6,23,.72)),url("pic/world.jpg");background-size:cover;background-position:center;box-shadow:var(--shadow)}.world-card>*{position:relative;z-index:1}.world-title{margin:0;color:#fff;font-size:clamp(28px,3.4vw,52px);line-height:1;letter-spacing:-.06em;text-shadow:0 18px 48px rgba(0,0,0,.26)}.world-count{display:flex;align-items:baseline;gap:10px;margin-top:18px}.world-count strong{color:#fff;font-size:clamp(66px,10.5vw,118px);line-height:.86;letter-spacing:-.075em;text-shadow:0 20px 54px rgba(0,0,0,.30)}.world-count span{color:rgba(248,251,255,.72);font-size:14px;font-weight:950}.world-card .actions{display:grid;gap:10px;min-width:150px}.panel{padding:clamp(18px,3vw,28px);background:rgba(7,17,31,.58)}.panel>*{position:relative;z-index:1}.section-header{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:16px}.section-header h2{margin:0;color:#fff;font-size:clamp(23px,2.2vw,32px);letter-spacing:-.045em}.section-count{flex:none;color:rgba(229,241,255,.68);font-size:13px;font-weight:950}.section-tools{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}.compact-select{min-width:170px;min-height:40px;padding:8px 36px 8px 13px;border-radius:999px;color:#eaf7ff;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.16);font-size:13px;font-weight:950}.compact-select option{color:#0f172a}.type-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}.type-card{position:relative;overflow:hidden;min-height:124px;border-radius:20px;padding:13px;color:var(--cream);border-color:color-mix(in srgb,var(--type-color) 48%,white 24%);background:linear-gradient(140deg,color-mix(in srgb,var(--type-color) 88%,#06121f 12%),color-mix(in srgb,var(--type-color) 68%,#06121f 32%));box-shadow:0 16px 38px color-mix(in srgb,var(--type-color) 20%,transparent);isolation:isolate;transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease)}.type-card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--type-color) 64%,white 34%);box-shadow:0 22px 54px color-mix(in srgb,var(--type-color) 28%,transparent)}.type-card:before,.type-card:after{content:"";position:absolute;pointer-events:none;z-index:0}.type-card:before{inset:0;background:linear-gradient(135deg,rgba(255,255,255,.20),transparent 32%),linear-gradient(115deg,transparent 0 58%,rgba(255,255,255,.10) 58% 59%,transparent 59%);opacity:.72}.type-card:after{right:-36px;bottom:-40px;width:112px;height:112px;border-radius:999px;border:1px solid rgba(248,239,224,.14);background:rgba(255,255,255,.065)}.type-card>*{position:relative;z-index:1}.type-name{margin:0;color:var(--cream);font-size:17px;line-height:1;letter-spacing:-.025em;text-shadow:0 4px 18px rgba(0,0,0,.18)}.type-count{display:block;margin-top:11px;color:var(--cream);font-size:32px;line-height:1;font-weight:950;letter-spacing:-.06em;text-shadow:0 8px 24px rgba(0,0,0,.16)}.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:14px}.action-button{min-width:0;min-height:36px;padding:0 9px;color:#dffcff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.action-button.plus{color:#06121f;background:rgba(255,255,255,.88);box-shadow:0 10px 24px rgba(2,8,23,.12)}.action-button.minus:hover{background:rgba(125,211,252,.26)}.action-button.clear:hover{color:#fff;background:rgba(240,91,112,.82);border-color:rgba(255,255,255,.18)}.world-card .action-button.clear{min-height:46px;color:#fff;background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.18)}.world-card .action-button.clear:hover{background:rgba(240,91,112,.86)}.season-stack{display:grid;gap:16px}.season-panel{overflow:hidden;border-radius:var(--r1);background:rgba(7,17,31,.48)}.season-panel.is-hidden-by-filter{display:none}.season-banner{position:relative;width:100%;min-height:clamp(138px,13vw,210px);aspect-ratio:4315/563;display:grid;align-items:center;padding:clamp(18px,3vw,30px);color:#fff;overflow:hidden;background:linear-gradient(90deg,rgba(2,6,23,.78),rgba(2,6,23,.38) 54%,rgba(2,6,23,.62)),var(--season-image),linear-gradient(135deg,#111827,#172554);background-size:cover,cover,cover;background-position:center,center,center;text-align:left}.season-banner:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 36%),radial-gradient(circle at 85% 18%,rgba(75,194,255,.26),transparent 28%);pointer-events:none}.season-banner-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,430px) auto;gap:clamp(16px,3vw,26px);align-items:center;width:100%}.season-title small{display:block;margin-bottom:8px;color:rgba(248,251,255,.68);font-size:12px;font-weight:950;letter-spacing:.18em;text-transform:uppercase}.season-title strong{display:block;color:#fff;font-size:clamp(26px,3.4vw,44px);line-height:1;letter-spacing:-.055em;text-shadow:0 16px 42px rgba(0,0,0,.26)}.season-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.season-metric{border-radius:16px;padding:12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.season-metric strong{font-size:22px}.season-metric span{font-size:11px}.season-toggle-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:16px;color:#06121f;background:linear-gradient(135deg,#fff7df,#83e7ff);box-shadow:0 18px 42px rgba(75,194,255,.22)}.season-toggle-icon svg{width:20px;height:20px;transition:transform .22s var(--ease)}.season-panel.is-collapsed .season-toggle-icon svg{transform:rotate(-90deg)}.season-body{padding:clamp(14px,2.5vw,22px)}.season-panel.is-collapsed .season-body{display:none}.pet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:14px}.pet-card{position:relative;overflow:hidden;border-radius:24px;padding:12px;background:rgba(255,255,255,.12);transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s var(--ease),background .18s var(--ease)}.pet-card:hover{transform:translateY(-2px);border-color:rgba(75,194,255,.34);background:rgba(255,255,255,.15);box-shadow:0 24px 68px rgba(2,8,23,.30)}.pet-card.has-owned{border-color:rgba(126,231,255,.58);box-shadow:0 18px 60px rgba(75,194,255,.16),var(--shadow2)}.pet-media{position:relative;overflow:hidden;aspect-ratio:1/1;border-radius:19px;background:radial-gradient(circle at 24% 18%,rgba(255,255,255,.72),transparent 28%),linear-gradient(135deg,rgba(75,194,255,.22),rgba(39,184,155,.12) 45%,rgba(153,171,247,.20));border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}.pet-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 58%,rgba(2,8,23,.28));pointer-events:none}.pet-media img{width:100%;height:100%;object-fit:cover;transform:scale(1.01);filter:drop-shadow(0 18px 28px rgba(2,8,23,.16))}.pet-media.is-missing img{display:none}.owned-badge{position:absolute;top:10px;right:10px;z-index:2;display:none;padding:6px 9px;border-radius:999px;color:#06121f;background:linear-gradient(135deg,#fff7df,#7ee7ff);border:1px solid rgba(255,255,255,.42);box-shadow:0 12px 32px rgba(2,8,23,.24);font-size:12px;font-weight:950}.owned-badge.is-visible{display:inline-flex}.pet-content{padding:12px 3px 2px}.pet-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.pet-name{margin:0;color:#fff;font-size:18px;line-height:1.2;letter-spacing:-.025em}.pet-count{color:#fff;font-size:28px;line-height:1;font-weight:950;letter-spacing:-.055em}.type-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;min-height:28px}.type-tag{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;color:var(--cream);background:linear-gradient(135deg,color-mix(in srgb,var(--tag-color) 88%,#06121f 12%),color-mix(in srgb,var(--tag-color) 68%,#06121f 32%));border:1px solid color-mix(in srgb,var(--tag-color) 54%,white 24%);box-shadow:0 8px 20px color-mix(in srgb,var(--tag-color) 18%,transparent);font-size:12px;font-weight:900}.pet-card .actions{margin-top:12px}
+.record-layout{display:grid;grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr);gap:16px;align-items:start}.record-form{border-radius:var(--r2);padding:clamp(18px,3vw,24px);background:rgba(255,255,255,.12)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .field.full{grid-column:1/-1}.record-form .field+.field{margin-top:0}.record-form label{color:rgba(248,251,255,.78)}.record-groups{display:grid;gap:12px}.record-season{overflow:hidden;border-radius:var(--r2);background:rgba(255,255,255,.10)}.record-season-header{width:100%;min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;color:#fff;background:rgba(255,255,255,.08);text-align:left}.record-season-header strong{display:block;font-size:16px;letter-spacing:-.02em}.record-season-header span{display:block;margin-top:3px;color:rgba(229,241,255,.62);font-size:12px;font-weight:850}.record-season-header svg{flex:none;width:18px;height:18px;transition:transform .18s var(--ease)}.record-season.is-collapsed .record-season-header svg{transform:rotate(-90deg)}.record-season.is-collapsed .record-scroll{display:none}.record-scroll{max-height:430px;overflow:auto;padding:12px;scrollbar-width:thin;scrollbar-color:rgba(126,231,255,.42) rgba(255,255,255,.08)}.record-scroll::-webkit-scrollbar{width:8px}.record-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.06);border-radius:999px}.record-scroll::-webkit-scrollbar-thumb{background:rgba(126,231,255,.42);border-radius:999px}.record-list{display:grid;gap:10px}.record-card{display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:12px;align-items:center;border-radius:20px;padding:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.10)}.record-thumb{width:74px;aspect-ratio:1/1;overflow:hidden;border-radius:16px;background:linear-gradient(135deg,rgba(75,194,255,.20),rgba(39,184,155,.12));border:1px solid rgba(255,255,255,.16)}.record-thumb img{width:100%;height:100%;object-fit:cover}.record-main{min-width:0}.record-main strong{display:block;overflow:hidden;color:#fff;font-size:16px;letter-spacing:-.02em;text-overflow:ellipsis;white-space:nowrap}.record-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px;color:rgba(229,241,255,.62);font-size:12px;font-weight:850}.record-note{margin:7px 0 0;color:rgba(229,241,255,.78);font-size:13px;line-height:1.55;word-break:break-word}.danger-button{min-height:36px;padding:0 10px;color:#ffd4dc;background:rgba(240,91,112,.12);border:1px solid rgba(240,91,112,.22)}.danger-button:hover{color:#fff;background:rgba(240,91,112,.84)}.empty-state{min-height:150px;display:grid;place-items:center;padding:22px;border:1px dashed rgba(255,255,255,.20);border-radius:var(--r2);color:rgba(229,241,255,.62);text-align:center;background:rgba(255,255,255,.06);font-weight:850}.site-footer{width:min(1080px,100%);margin:0 auto;border-radius:999px;padding:12px 16px;color:rgba(229,241,255,.64);text-align:center;font-size:12px;font-weight:850;background:rgba(7,17,31,.52)}.app-screen .site-footer{width:100%;margin-top:4px}.toast{position:fixed;left:50%;bottom:calc(22px + var(--safe-bottom));z-index:30;max-width:min(440px,calc(100vw - 32px));padding:12px 15px;border-radius:999px;color:#06121f;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.46);box-shadow:0 18px 54px rgba(2,8,23,.24);opacity:0;transform:translate(-50%,14px);pointer-events:none;transition:opacity .18s var(--ease),transform .18s var(--ease);font-size:14px;font-weight:900;text-align:center}.toast.is-visible{opacity:1;transform:translate(-50%,0)}@media(min-width:1200px){.pet-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}@media(max-width:1180px){:root{--container:min(100vw - 34px,1060px)}.topbar{grid-template-columns:minmax(220px,1fr) minmax(0,auto)}.top-nav{grid-column:1/-1;justify-content:flex-start}.type-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero-content,.season-banner-inner{grid-template-columns:1fr}.season-toggle-icon{position:absolute;top:18px;right:18px}.record-layout{grid-template-columns:1fr}}@media(max-width:760px){:root{--container:calc(100vw - 24px)}.screen{padding-top:max(12px,var(--safe-top))}.auth-screen{padding-inline:12px}.auth-layout{grid-template-columns:1fr}.auth-panel{min-height:420px;padding:28px}.auth-metrics{position:relative;left:auto;right:auto;bottom:auto;margin-top:34px}.brand-title{font-size:clamp(40px,11vw,58px)}.topbar{grid-template-columns:1fr;border-radius:20px}.top-actions{justify-content:space-between}.sync-badge{flex:1}.hero{aspect-ratio:auto;min-height:300px;border-radius:26px}.hero-metrics{grid-template-columns:1fr 1fr}.world-card{grid-template-columns:1fr;aspect-ratio:auto;min-height:260px;border-radius:26px}.world-card .actions{min-width:0;width:100%}.type-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.type-card{min-height:122px;padding:12px}.type-name{font-size:16px}.type-count{font-size:30px}.section-header{align-items:flex-start;flex-direction:column}.section-tools,.compact-select{width:100%}.pet-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.season-metrics{grid-template-columns:1fr 1fr 1fr}.form-grid{grid-template-columns:1fr}.record-card{grid-template-columns:62px minmax(0,1fr)}.record-thumb{width:62px}.record-card .danger-button{grid-column:1/-1}}@media(max-width:480px){:root{--container:calc(100vw - 18px)}.auth-card,.panel,.hero,.world-card,.season-panel{border-radius:22px}.auth-metrics,.hero-metrics,.season-metrics{grid-template-columns:1fr}.hero h1{font-size:clamp(34px,12vw,48px)}.world-count strong{font-size:74px}.type-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.type-card .actions{gap:5px}.type-card .action-button{min-height:34px;padding:0 6px}.pet-grid{grid-template-columns:1fr}.site-footer{border-radius:18px}}
+
+
+
+
+
+
+/* === Final visual system: shared rail, strict alignment, premium surfaces === */
+:root{
+  --shell-max:1480px;
+  --shell-gutter:clamp(14px,3.2vw,32px);
+  --shell-width:min(var(--shell-max),calc(100vw - var(--shell-gutter) - var(--shell-gutter)));
+  --surface-radius:clamp(24px,2.35vw,34px);
+  --surface-pad:clamp(20px,2.45vw,34px);
+  --surface-gap:clamp(16px,1.7vw,24px);
+}
+.app-shell{
+  width:var(--shell-width)!important;
+  max-width:var(--shell-max)!important;
+  margin-inline:auto!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  justify-items:stretch!important;
+  gap:var(--surface-gap)!important;
+}
+.app-shell > :is(.topbar,.hero,.world-card,.panel,.site-footer){
+  width:100%!important;
+  inline-size:100%!important;
+  max-width:none!important;
+  max-inline-size:none!important;
+  min-width:0!important;
+  justify-self:stretch!important;
+  align-self:stretch!important;
+  margin-inline:0!important;
+  box-sizing:border-box!important;
+}
+.topbar,.hero,.world-card,.panel,.season-panel,.record-form,.record-season,.pet-card,.type-card{
+  border-color:rgba(255,255,255,.15)!important;
+  box-shadow:0 26px 88px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+.topbar{
+  border-radius:24px!important;
+  padding:10px 12px!important;
+  background:linear-gradient(180deg,rgba(7,17,31,.78),rgba(7,17,31,.56))!important;
+}
+.top-nav{
+  border:1px solid rgba(255,255,255,.08)!important;
+  background:rgba(255,255,255,.065)!important;
+}
+.top-nav button:hover{
+  box-shadow:0 14px 34px rgba(75,194,255,.24),inset 0 1px 0 rgba(255,255,255,.45)!important;
+}
+.hero,.world-card,.panel{
+  position:relative!important;
+  border-radius:var(--surface-radius)!important;
+  padding:var(--surface-pad)!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
+}
+.hero,.world-card{
+  min-height:unset!important;
+  height:clamp(224px,15.1vw,312px)!important;
+  aspect-ratio:auto!important;
+  border:1px solid rgba(255,255,255,.17)!important;
+  outline:1px solid rgba(255,255,255,.07)!important;
+  outline-offset:-2px!important;
+  box-shadow:0 36px 118px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.06)!important;
+}
+.hero{
+  align-items:center!important;
+  background:
+    linear-gradient(90deg,rgba(2,6,23,.93) 0%,rgba(5,13,25,.74) 36%,rgba(5,13,25,.30) 72%,rgba(2,6,23,.56) 100%),
+    radial-gradient(circle at 86% 20%,rgba(126,231,255,.30),transparent 28%),
+    url("pic/main.jpg")!important;
+  background-size:cover,cover,cover!important;
+  background-position:center!important;
+}
+.world-card{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(136px,180px)!important;
+  align-items:center!important;
+  gap:clamp(18px,3vw,34px)!important;
+  background:
+    linear-gradient(90deg,rgba(2,6,23,.93) 0%,rgba(5,13,25,.70) 42%,rgba(5,13,25,.28) 72%,rgba(2,6,23,.58) 100%),
+    radial-gradient(circle at 86% 20%,rgba(75,194,255,.32),transparent 30%),
+    url("pic/world.jpg")!important;
+  background-size:cover,cover,cover!important;
+  background-position:center!important;
+}
+.hero:before,.world-card:before,.panel:before{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.135),transparent 31%),
+    linear-gradient(110deg,transparent 0 70%,rgba(255,255,255,.075) 70% 71%,transparent 71%),
+    radial-gradient(circle at 8% 8%,rgba(255,247,223,.11),transparent 22%)!important;
+}
+.hero:after,.world-card:after,.panel:after{
+  content:""!important;
+  position:absolute!important;
+  inset:1px!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  border-radius:calc(var(--surface-radius) - 1px)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 30%,rgba(255,255,255,.045) 72%,rgba(255,255,255,.11))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),inset 0 -1px 0 rgba(255,255,255,.055)!important;
+}
+.hero-content,.world-card > *,.panel > *{
+  position:relative!important;
+  z-index:1!important;
+  min-width:0!important;
+}
+.hero-content{
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(260px,420px)!important;
+  align-items:end!important;
+  gap:clamp(18px,3vw,34px)!important;
+}
+.hero h1,.world-title,.section-header h2{
+  margin-left:0!important;
+  padding-left:0!important;
+}
+.hero h1{
+  max-width:none!important;
+  font-size:clamp(40px,5.15vw,72px)!important;
+  letter-spacing:-.078em!important;
+  text-wrap:balance;
+}
+@media(min-width:900px){.hero h1 br{display:none!important}}
+.hero-metric,.season-metric{
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.08))!important;
+  border-color:rgba(255,255,255,.17)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 16px 42px rgba(0,0,0,.14)!important;
+}
+.world-title{
+  font-size:clamp(32px,3.5vw,54px)!important;
+  letter-spacing:-.064em!important;
+}
+.world-count{margin-top:clamp(12px,1.8vw,20px)!important}
+.world-count strong{
+  font-size:clamp(72px,9vw,116px)!important;
+  letter-spacing:-.082em!important;
+}
+.world-card .actions{
+  width:100%!important;
+  min-width:0!important;
+  justify-self:end!important;
+  align-self:end!important;
+}
+.world-card .action-button.clear{
+  min-height:48px!important;
+  border-radius:16px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.08))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)!important;
+}
+.panel{
+  background:linear-gradient(180deg,rgba(9,20,36,.70),rgba(7,17,31,.52))!important;
+  box-shadow:0 28px 94px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.11)!important;
+}
+.section-header{
+  margin-bottom:clamp(16px,2vw,22px)!important;
+}
+.section-header h2{
+  font-size:clamp(24px,2.1vw,34px)!important;
+}
+.type-grid{gap:12px!important}
+.type-card{
+  min-height:118px!important;
+  padding:14px!important;
+  border-radius:18px!important;
+  color:var(--cream)!important;
+  border-color:color-mix(in srgb,var(--type-color) 46%,rgba(255,255,255,.22))!important;
+  background:
+    linear-gradient(150deg,color-mix(in srgb,var(--type-color) 84%,#06121f 16%) 0%,color-mix(in srgb,var(--type-color) 58%,#07111f 42%) 68%,rgba(7,17,31,.82) 100%)!important;
+  box-shadow:0 16px 42px color-mix(in srgb,var(--type-color) 18%,transparent),inset 0 1px 0 rgba(255,255,255,.14)!important;
+}
+.type-card:before{
+  inset:0!important;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.17),transparent 34%),
+    linear-gradient(118deg,transparent 0 62%,rgba(255,255,255,.105) 62% 63%,transparent 63% 100%)!important;
+  opacity:.72!important;
+}
+.type-card:after{
+  right:-42px!important;
+  top:-46px!important;
+  bottom:auto!important;
+  width:116px!important;
+  height:116px!important;
+  border-radius:0 0 0 58px!important;
+  transform:rotate(18deg)!important;
+  border:0!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.025))!important;
+}
+.type-name{
+  font-size:16px!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 6px 20px rgba(0,0,0,.22)!important;
+}
+.type-count{
+  margin-top:9px!important;
+  font-size:31px!important;
+}
+.type-card .actions{
+  margin-top:12px!important;
+  gap:6px!important;
+}
+.type-card .action-button{
+  min-height:33px!important;
+  border-radius:11px!important;
+  background:rgba(255,255,255,.13)!important;
+}
+.type-card .action-button.plus{background:rgba(255,255,255,.86)!important}
+.season-panel{
+  border-radius:var(--surface-radius)!important;
+  overflow:hidden!important;
+  background:linear-gradient(180deg,rgba(7,17,31,.60),rgba(7,17,31,.44))!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+}
+.season-banner{
+  min-height:clamp(142px,12vw,196px)!important;
+  background:
+    linear-gradient(90deg,rgba(2,6,23,.86),rgba(2,6,23,.42) 58%,rgba(2,6,23,.70)),
+    var(--season-image),
+    linear-gradient(135deg,#111827,#172554)!important;
+  background-size:cover,cover,cover!important;
+  background-position:center!important;
+}
+.season-toggle-icon{
+  width:44px!important;
+  height:44px!important;
+  border-radius:999px!important;
+  color:#e9fbff!important;
+  background:rgba(255,255,255,.13)!important;
+  border:1px solid rgba(255,255,255,.22)!important;
+  backdrop-filter:blur(14px) saturate(1.1)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(1.1)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 18px 42px rgba(0,0,0,.18)!important;
+}
+.pet-grid{gap:16px!important}
+.pet-card{
+  padding:12px!important;
+  border-radius:24px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.135),rgba(255,255,255,.075))!important;
+}
+.pet-card:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),transparent 35%)!important;
+  opacity:.8!important;
+}
+.pet-card > *{position:relative!important;z-index:1!important}
+.pet-media{
+  border-radius:20px!important;
+  background:radial-gradient(circle at 24% 18%,rgba(255,255,255,.70),transparent 28%),linear-gradient(135deg,rgba(75,194,255,.18),rgba(39,184,155,.10) 45%,rgba(153,171,247,.18))!important;
+}
+.type-tag{border-color:color-mix(in srgb,var(--tag-color) 58%,white 22%)!important}
+.record-layout{gap:18px!important}
+.record-form,.record-season{
+  border-radius:24px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.07))!important;
+}
+.record-season-header{background:linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.055))!important}
+.site-footer{
+  background:rgba(7,17,31,.52)!important;
+  border-color:rgba(255,255,255,.12)!important;
+}
+@media(max-width:1180px){
+  :root{--shell-width:min(1060px,calc(100vw - 34px));--surface-pad:clamp(17px,2.8vw,28px)}
+  .hero,.world-card{height:clamp(238px,23vw,302px)!important}
+  .hero-content{grid-template-columns:1fr!important}
+}
+@media(max-width:760px){
+  :root{--shell-gutter:12px;--shell-width:calc(100vw - 24px);--surface-radius:24px;--surface-pad:18px;--surface-gap:16px}
+  .hero,.world-card{height:auto!important;min-height:292px!important;aspect-ratio:auto!important;border-radius:24px!important}
+  .world-card{grid-template-columns:1fr!important;align-items:end!important}
+  .world-card .actions{justify-self:stretch!important;align-self:stretch!important}
+  .hero-metrics{grid-template-columns:1fr 1fr!important}
+  .type-grid{gap:9px!important}
+  .type-card{min-height:112px!important;padding:12px!important;border-radius:17px!important}
+  .section-header{align-items:flex-start!important}
+}
+@media(max-width:480px){
+  :root{--shell-width:calc(100vw - 18px);--surface-pad:16px}
+  .hero,.world-card{min-height:270px!important}
+  .hero h1{font-size:clamp(34px,12vw,48px)!important}
+  .world-count strong{font-size:72px!important}
+  .type-card{min-height:108px!important}
+}
+</style>
+</head>
+<body class="is-auth">
+<section id="authScreen" class="screen auth-screen"><main class="auth-layout" aria-labelledby="authTitle"><section class="auth-panel" aria-label="应用信息"><div><div class="brand-mark">洛</div><h1 id="authTitle" class="brand-title">异色精灵<br><span>保底进度管理</span></h1></div><div class="auth-metrics" aria-label="当前赛季信息"><div class="auth-metric"><strong>S1</strong><span>当前赛季</span></div><div class="auth-metric"><strong>19</strong><span>异色数量</span></div></div></section><section class="auth-card" aria-label="账号登录"><h2 id="authHeading">登录账号</h2><p class="auth-intro">使用邮箱与密码登录后，可在不同设备间同步进度。</p><div class="mode-toggle" role="tablist" aria-label="账号操作"><button class="mode-button is-active" type="button" data-auth-mode="login">登录</button><button class="mode-button" type="button" data-auth-mode="register">注册</button></div><form id="authForm" autocomplete="on"><div class="field"><label for="emailInput">邮箱</label><input id="emailInput" name="email" type="email" placeholder="you@example.com" autocomplete="email" required /></div><div class="field"><label for="passwordInput">密码</label><input id="passwordInput" name="password" type="password" placeholder="至少 6 位" autocomplete="current-password" minlength="6" required /></div><button id="authSubmit" class="primary-button" type="submit">登录</button><div id="authStatus" class="status-message" aria-live="polite"></div></form></section></main><footer class="site-footer">Copyright © 2026 MZG [神-818001]. All rights reserved.</footer></section>
+<section id="appScreen" class="screen app-screen is-hidden"><div class="app-shell"><header class="topbar"><div class="top-left"><div class="mini-logo">洛</div><div><strong class="app-name">洛克王国异色精灵保底进度管理</strong><span id="userEmailText" class="user-email">未登录</span></div></div><nav class="top-nav" aria-label="页面导航"><button type="button" data-scroll-target="worldSection">世界池</button><button type="button" data-scroll-target="typeSection">系别池</button><button type="button" data-scroll-target="familySection">家族池</button><button type="button" data-scroll-target="recordSection">纪念册</button></nav><div class="top-actions"><span id="syncStatus" class="sync-badge">已同步</span><button id="logoutButton" class="ghost-button" type="button">退出</button></div></header><section class="hero" aria-labelledby="heroTitle"><div class="hero-content"><h1 id="heroTitle">异色精灵<br><span class="hero-title-accent">保底进度管理</span></h1><div class="hero-metrics" aria-label="赛季概览"><div class="hero-metric"><strong id="heroSeasonText">S1</strong><span>赛季（S1）</span></div><div class="hero-metric"><strong id="heroSeasonPetCount">19</strong><span>赛季异色数量</span></div></div></div></section><section id="worldSection" class="world-card" aria-labelledby="worldTitle" data-scope="world" data-key="worldPool"><div><h2 id="worldTitle" class="world-title">世界池进度</h2><div class="world-count"><strong id="worldCount">0</strong><span>次</span></div></div><div class="actions"><button class="action-button clear" type="button" data-action="clear">清空</button></div></section><section id="typeSection" class="panel" aria-labelledby="typeTitle"><div class="section-header"><h2 id="typeTitle">系别池</h2><span id="typeCountText" class="section-count">0 项</span></div><div id="typeGrid" class="type-grid"></div></section><section id="familySection" class="panel" aria-labelledby="familyTitle"><div class="section-header"><h2 id="familyTitle">家族池</h2><div class="section-tools"><select id="seasonFilter" class="compact-select" aria-label="选择赛季"></select><span id="familyCountText" class="section-count">0 项</span></div></div><div id="seasonContainer" class="season-stack"></div></section><section id="recordSection" class="panel" aria-labelledby="recordTitle"><div class="section-header"><h2 id="recordTitle">异色纪念册</h2><span id="recordCountText" class="section-count">0 条</span></div><div class="record-layout"><form id="recordForm" class="record-form"><div class="form-grid"><div class="field"><label for="recordSeasonSelect">赛季</label><select id="recordSeasonSelect" required></select></div><div class="field"><label for="recordPetSelect">异色精灵</label><select id="recordPetSelect" required></select></div><div class="field full"><label for="recordDateInput">获得日期</label><input id="recordDateInput" type="date" required /></div><div class="field full"><label for="recordNoteInput">备注</label><textarea id="recordNoteInput" maxlength="120" placeholder="来源、抽数、地点等补充信息"></textarea></div></div><button class="primary-button" type="submit">加入纪念册</button><div id="recordStatus" class="status-message" aria-live="polite"></div></form><div id="recordGroups" class="record-groups"></div></div></section><footer class="site-footer">Copyright © 2026 MZG [神-818001]. All rights reserved.</footer></div></section><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";import{getFirestore,doc,getDoc,setDoc,onSnapshot,runTransaction,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyBv6o4ksuLGIix5iMoEi75QJsY1X9wfhJc",authDomain:"roco-771b3.firebaseapp.com",projectId:"roco-771b3",storageBucket:"roco-771b3.firebasestorage.app",messagingSenderId:"179088591818",appId:"1:179088591818:web:f323e691d26219793e5d33",measurementId:"G-7823QFY2HR"};
+const allTypes=['普通','草','火','水','光','地','冰','龙','电','毒','虫','武','翼','萌','幽','恶','机械','幻'];
+const typeColors={'普通':'#3b657f','草':'#5db875','火':'#df5812','水':'#6eadff','光':'#4BC2FF','地':'#a08149','冰':'#69ADD5','龙':'#eb4860','电':'#e1c915','毒':'#be60d1','虫':'#9ccc30','武':'#f99633','翼':'#3cc3d0','萌':'#f280a8','幽':'#904ae1','恶':'#cd4474','机械':'#27b89b','幻':'#99abf7'};
+const seasons=[{id:'s1',code:'S1',title:'暗夜拾光',displayName:'S1·暗夜拾光',image:'season/s1.jpg',pets:[{name:'柴渣虫',file:'chaizhachong',types:['火','草']},{name:'双灯鱼',file:'shuangdengyu',types:['水','电']},{name:'月牙雪熊',file:'yueyaxuexiong',types:['冰','幻']},{name:'粉粉星',file:'fenfenxing',types:['电','幻']},{name:'粉星仔',file:'fenxingzai',types:['幻']},{name:'贝瑟',file:'beise',types:['火','机械']},{name:'嗜光嗡嗡',file:'shiguangwengweng',types:['光','恶']},{name:'空空颅',file:'kongkonglu',types:['幽']},{name:'格兰种子',file:'gelanzhongzi',types:['草']},{name:'奇丽草',file:'qilicao',types:['草']},{name:'治愈兔',file:'zhiyutu',types:['火','萌']},{name:'呼呼猪',file:'huhuzhu',types:['冰','地']},{name:'机械方方',file:'jixiefangfang',types:['机械']},{name:'恶魔狼',file:'emolang',types:['恶']},{name:'拉特',file:'late',types:['电']},{name:'大耳帽兜',file:'daermaodou',types:['冰','萌']},{name:'火红尾',file:'huohongwei',types:['火']},{name:'绒绒',file:'rongrong',types:['光','虫']},{name:'犀角鸟',file:'xijiaoniao',types:['光']}]}];
+const familyPets=seasons.flatMap(s=>s.pets.map(p=>({...p,id:`${s.id}-${p.file}`,seasonId:s.id,seasonCode:s.code,seasonName:s.displayName})));const seasonMap=new Map(seasons.map(s=>[s.id,s]));const petMap=new Map(familyPets.map(p=>[p.id,p]));const petNameMap=new Map(familyPets.map(p=>[p.name,p]));const nf=new Intl.NumberFormat('zh-CN');
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);let currentUser=null,userDocRef=null,unsubscribeUserDoc=null,authMode='login',state=createDefaultState(),toastTimer=0,pageResizeObserver=null;
+const els={authScreen:document.getElementById('authScreen'),appScreen:document.getElementById('appScreen'),authForm:document.getElementById('authForm'),authHeading:document.getElementById('authHeading'),authSubmit:document.getElementById('authSubmit'),authStatus:document.getElementById('authStatus'),emailInput:document.getElementById('emailInput'),passwordInput:document.getElementById('passwordInput'),modeButtons:Array.from(document.querySelectorAll('[data-auth-mode]')),logoutButton:document.getElementById('logoutButton'),userEmailText:document.getElementById('userEmailText'),syncStatus:document.getElementById('syncStatus'),worldCount:document.getElementById('worldCount'),typeGrid:document.getElementById('typeGrid'),typeCountText:document.getElementById('typeCountText'),familyCountText:document.getElementById('familyCountText'),seasonFilter:document.getElementById('seasonFilter'),seasonContainer:document.getElementById('seasonContainer'),heroSeasonText:document.getElementById('heroSeasonText'),heroSeasonPetCount:document.getElementById('heroSeasonPetCount'),recordForm:document.getElementById('recordForm'),recordSeasonSelect:document.getElementById('recordSeasonSelect'),recordPetSelect:document.getElementById('recordPetSelect'),recordDateInput:document.getElementById('recordDateInput'),recordNoteInput:document.getElementById('recordNoteInput'),recordStatus:document.getElementById('recordStatus'),recordCountText:document.getElementById('recordCountText'),recordGroups:document.getElementById('recordGroups'),toast:document.getElementById('toast')};
+function createDefaultState(){return{typePools:Object.fromEntries(allTypes.map(t=>[t,0])),familyPools:Object.fromEntries(familyPets.map(p=>[p.id,0])),worldPool:0,shinyRecords:[]}}function safeCount(v){const n=Number(v);return Number.isFinite(n)?Math.max(0,Math.trunc(n)):0}function clampDown(v){return Math.max(0,safeCount(v))}function todayString(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function normalizeDateOnly(v){if(typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v))return v;const d=v?new Date(v):new Date();if(Number.isNaN(d.getTime()))return todayString();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function cryptoRandomId(){return window.crypto?.randomUUID?window.crypto.randomUUID():`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`}function escapeHtml(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}function cssEscape(v){return window.CSS?.escape?CSS.escape(v):String(v).replace(/(["\\])/g,'\\$1')}function petImageSrc(p){return`pet/${p.file}.jpg`}function typeStyle(t){return`--type-color:${typeColors[t]||'#27b89b'}`}function tagStyle(t){return`--tag-color:${typeColors[t]||'#27b89b'}`}
+function normalizeRecord(r){if(!r||typeof r!=='object')return null;const p=petMap.get(r.petId)||petNameMap.get(r.petName);if(!p)return null;const s=seasonMap.get(r.seasonId)||seasonMap.get(p.seasonId);if(!s)return null;return{id:typeof r.id==='string'&&r.id?r.id:cryptoRandomId(),petId:p.id,petName:p.name,seasonId:s.id,obtainedDate:normalizeDateOnly(r.obtainedDate||r.obtainedAt||r.date),note:typeof r.note==='string'?r.note.slice(0,120):'',createdAt:typeof r.createdAt==='string'?r.createdAt:new Date().toISOString()}}function normalizeState(raw={}){const d=createDefaultState(),typePools={...d.typePools},familyPools={...d.familyPools};if(raw?.typePools&&typeof raw.typePools==='object')for(const t of allTypes)typePools[t]=safeCount(raw.typePools[t]);if(raw?.familyPools&&typeof raw.familyPools==='object')for(const p of familyPets)familyPools[p.id]=safeCount(raw.familyPools[p.id]??raw.familyPools[p.name]);const shinyRecords=Array.isArray(raw.shinyRecords)?raw.shinyRecords.map(normalizeRecord).filter(Boolean):[];return{typePools,familyPools,worldPool:safeCount(raw.worldPool),shinyRecords}}
+function setSyncStatus(text,mode='ok'){els.syncStatus.textContent=text;els.syncStatus.classList.toggle('is-saving',mode==='saving');els.syncStatus.classList.toggle('is-error',mode==='error')}function setAuthStatus(text,isError=false){els.authStatus.textContent=text||'';els.authStatus.classList.toggle('is-error',!!isError)}function setRecordStatus(text,isError=false){els.recordStatus.textContent=text||'';els.recordStatus.classList.toggle('is-error',!!isError)}function showToast(text){clearTimeout(toastTimer);els.toast.textContent=text;els.toast.classList.add('is-visible');toastTimer=setTimeout(()=>els.toast.classList.remove('is-visible'),2200)}
+function buildStaticUI(){els.typeGrid.innerHTML=allTypes.map(t=>`<article class="type-card" data-scope="type" data-key="${escapeHtml(t)}" style="${typeStyle(t)}"><h3 class="type-name">${escapeHtml(t)}</h3><strong class="type-count" data-count-for="type:${escapeHtml(t)}">0</strong><div class="actions"><button class="action-button plus" type="button" data-action="plus">+1</button><button class="action-button minus" type="button" data-action="minus">-1</button><button class="action-button clear" type="button" data-action="clear">清空</button></div></article>`).join('');els.typeCountText.textContent=`${allTypes.length} 项`;els.familyCountText.textContent=`${familyPets.length} 项`;els.heroSeasonText.textContent=seasons[0]?.code||'—';els.heroSeasonPetCount.textContent=String(seasons[0]?.pets.length||0);els.seasonFilter.innerHTML=[`<option value="all">全部赛季</option>`,...seasons.map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.displayName)}</option>`)].join('');els.recordSeasonSelect.innerHTML=seasons.map(s=>`<option value="${escapeHtml(s.id)}">${escapeHtml(s.displayName)}</option>`).join('');updateRecordPetOptions();els.seasonContainer.innerHTML=seasons.map(s=>`<section class="season-panel" data-season-id="${escapeHtml(s.id)}"><button class="season-banner" type="button" data-toggle-season="${escapeHtml(s.id)}" style="--season-image:url('${escapeHtml(s.image)}')" aria-expanded="true"><div class="season-banner-inner"><div class="season-title"><small>${escapeHtml(s.code)}</small><strong>${escapeHtml(s.title)}</strong></div><div class="season-metrics"><div class="season-metric"><strong data-season-family-total="${escapeHtml(s.id)}">0</strong><span>赛季进度</span></div><div class="season-metric"><strong data-season-record-total="${escapeHtml(s.id)}">0</strong><span>异色收录</span></div><div class="season-metric"><strong data-season-owned-total="${escapeHtml(s.id)}">0</strong><span>点亮精灵</span></div></div><span class="season-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></button><div class="season-body"><div class="pet-grid">${s.pets.map(raw=>{const p=petMap.get(`${s.id}-${raw.file}`);return`<article class="pet-card" data-scope="family" data-key="${escapeHtml(p.id)}" data-season-id="${escapeHtml(s.id)}"><div class="pet-media"><img src="${escapeHtml(petImageSrc(p))}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.closest('.pet-media').classList.add('is-missing')"/><span class="owned-badge" data-owned-badge="${escapeHtml(p.id)}"></span></div><div class="pet-content"><div class="pet-title-row"><h3 class="pet-name">${escapeHtml(p.name)}</h3><strong class="pet-count" data-count-for="family:${escapeHtml(p.id)}">0</strong></div><div class="type-tags">${p.types.map(t=>`<span class="type-tag" style="${tagStyle(t)}">${escapeHtml(t)}</span>`).join('')}</div><div class="actions"><button class="action-button plus" type="button" data-action="plus">+1</button><button class="action-button minus" type="button" data-action="minus">-1</button><button class="action-button clear" type="button" data-action="clear">清空</button></div></div></article>`}).join('')}</div></div></section>`).join('');els.recordDateInput.value=todayString();applySeasonFilter();refreshPageBackgroundHeight()}
+function updateRecordPetOptions(){const sid=els.recordSeasonSelect.value||seasons[0]?.id,s=seasonMap.get(sid)||seasons[0];els.recordPetSelect.innerHTML=s.pets.map(raw=>{const p=petMap.get(`${s.id}-${raw.file}`);return`<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`}).join('')}
+function render(){els.worldCount.textContent=nf.format(state.worldPool);for(const t of allTypes){const el=document.querySelector(`[data-count-for="type:${cssEscape(t)}"]`);if(el)el.textContent=nf.format(state.typePools[t]||0)}for(const p of familyPets){const el=document.querySelector(`[data-count-for="family:${cssEscape(p.id)}"]`);if(el)el.textContent=nf.format(state.familyPools[p.id]||0)}renderSeasonMetrics();renderOwnedBadges();renderRecords();refreshPageBackgroundHeight()}
+function getRecordCountsByPet(){const m=new Map;for(const r of state.shinyRecords)m.set(r.petId,(m.get(r.petId)||0)+1);return m}function renderOwnedBadges(){const counts=getRecordCountsByPet();for(const p of familyPets){const c=counts.get(p.id)||0,b=document.querySelector(`[data-owned-badge="${cssEscape(p.id)}"]`),card=document.querySelector(`.pet-card[data-key="${cssEscape(p.id)}"]`);if(!b||!card)continue;b.textContent=c>0?`已拥有 ×${c}`:'';b.classList.toggle('is-visible',c>0);card.classList.toggle('has-owned',c>0)}}
+function renderSeasonMetrics(){const bySeason=new Map,owned=new Map;for(const r of state.shinyRecords){bySeason.set(r.seasonId,(bySeason.get(r.seasonId)||0)+1);if(!owned.has(r.seasonId))owned.set(r.seasonId,new Set);owned.get(r.seasonId).add(r.petId)}for(const s of seasons){const total=s.pets.reduce((sum,raw)=>{const p=petMap.get(`${s.id}-${raw.file}`);return sum+safeCount(state.familyPools[p.id])},0),f=document.querySelector(`[data-season-family-total="${cssEscape(s.id)}"]`),rec=document.querySelector(`[data-season-record-total="${cssEscape(s.id)}"]`),own=document.querySelector(`[data-season-owned-total="${cssEscape(s.id)}"]`);if(f)f.textContent=nf.format(total);if(rec)rec.textContent=nf.format(bySeason.get(s.id)||0);if(own)own.textContent=nf.format(owned.get(s.id)?.size||0)}}
+function renderRecords(){const records=[...state.shinyRecords].sort((a,b)=>String(b.obtainedDate).localeCompare(String(a.obtainedDate))||String(b.createdAt).localeCompare(String(a.createdAt)));els.recordCountText.textContent=`${records.length} 条`;if(!records.length){els.recordGroups.innerHTML='<div class="empty-state">暂无异色收录记录</div>';return}const by=new Map(seasons.map(s=>[s.id,[]]));for(const r of records){if(!by.has(r.seasonId))by.set(r.seasonId,[]);by.get(r.seasonId).push(r)}els.recordGroups.innerHTML=seasons.map(s=>{const arr=by.get(s.id)||[];if(!arr.length)return'';return`<section class="record-season" data-record-season="${escapeHtml(s.id)}"><button class="record-season-header" type="button" data-toggle-record-season="${escapeHtml(s.id)}" aria-expanded="true"><span><strong>${escapeHtml(s.displayName)}</strong><span>${arr.length} 条记录</span></span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="record-scroll"><div class="record-list">${arr.map(renderRecordCard).join('')}</div></div></section>`}).join('')||'<div class="empty-state">暂无异色收录记录</div>'}
+function renderRecordCard(r){const p=petMap.get(r.petId);if(!p)return'';return`<article class="record-card"><div class="record-thumb"><img src="${escapeHtml(petImageSrc(p))}" alt="${escapeHtml(p.name)}" loading="lazy"/></div><div class="record-main"><strong>${escapeHtml(p.name)}</strong><div class="record-meta"><span>${escapeHtml(r.obtainedDate)}</span><span>${escapeHtml(p.seasonName)}</span></div>${r.note?`<p class="record-note">${escapeHtml(r.note)}</p>`:''}</div><button class="danger-button" type="button" data-delete-record="${escapeHtml(r.id)}">删除</button></article>`}
+function applySeasonFilter(){const v=els.seasonFilter.value||'all';for(const p of document.querySelectorAll('.season-panel[data-season-id]'))p.classList.toggle('is-hidden-by-filter',!(v==='all'||p.dataset.seasonId===v));refreshPageBackgroundHeight()}
+async function mutateState(mutator,toastText){if(!currentUser||!userDocRef){showToast('请先登录账号');return}setSyncStatus('保存中','saving');try{await runTransaction(db,async tx=>{const snap=await tx.get(userDocRef),next=normalizeState(snap.exists()?snap.data():{});mutator(next);tx.set(userDocRef,{user_id:currentUser.uid,typePools:next.typePools,familyPools:next.familyPools,worldPool:next.worldPool,shinyRecords:next.shinyRecords,updatedAt:serverTimestamp()},{merge:true})});setSyncStatus('已同步');if(toastText)showToast(toastText)}catch(e){console.error(e);setSyncStatus('保存失败','error');showToast(`保存失败：${e.code||e.message||'未知错误'}`)}}
+function handlePoolAction(card,action){const scope=card.dataset.scope,key=card.dataset.key;if(!scope||!key||!action)return;if(scope==='world'){if(action!=='clear')return;if(!confirm('确定要清空【世界池】的进度吗？'))return;mutateState(n=>{n.worldPool=0},'已清空世界池');return}if(scope==='type'){if(!allTypes.includes(key))return;if(action==='clear'){if(!confirm(`确定要清空【${key}】的进度吗？`))return;mutateState(n=>{n.typePools[key]=0},`已清空${key}`);return}const d=action==='plus'?1:action==='minus'?-1:0;if(!d)return;mutateState(n=>{n.typePools[key]=clampDown((n.typePools[key]||0)+d);n.worldPool=clampDown(n.worldPool+d)});return}if(scope==='family'){const p=petMap.get(key);if(!p)return;if(action==='clear'){if(!confirm(`确定要清空【${p.name}】的进度吗？`))return;mutateState(n=>{n.familyPools[p.id]=0},`已清空${p.name}`);return}const d=action==='plus'?1:action==='minus'?-1:0;if(!d)return;mutateState(n=>{n.familyPools[p.id]=clampDown((n.familyPools[p.id]||0)+d);for(const t of p.types)n.typePools[t]=clampDown((n.typePools[t]||0)+d);n.worldPool=clampDown(n.worldPool+d)})}}
+async function addRecord(e){e.preventDefault();const p=petMap.get(els.recordPetSelect.value),s=seasonMap.get(els.recordSeasonSelect.value);if(!p||!s||p.seasonId!==s.id){setRecordStatus('请选择有效的赛季和异色精灵。',true);return}const record={id:cryptoRandomId(),petId:p.id,petName:p.name,seasonId:s.id,obtainedDate:normalizeDateOnly(els.recordDateInput.value),note:els.recordNoteInput.value.trim().slice(0,120),createdAt:new Date().toISOString()};await mutateState(n=>{n.shinyRecords=[...n.shinyRecords,record]},'已加入纪念册');els.recordNoteInput.value='';setRecordStatus('已保存。');setTimeout(()=>setRecordStatus(''),1800)}
+function deleteRecord(id){const r=state.shinyRecords.find(x=>x.id===id);if(!r)return;const p=petMap.get(r.petId),label=p?p.name:'该记录';if(!confirm(`确定要删除【${label}】的异色收录记录吗？`))return;mutateState(n=>{n.shinyRecords=n.shinyRecords.filter(x=>x.id!==id)},'已删除记录')}
+function getSolarTermSlug(date=new Date()){const terms=[['xiaohan',1,5],['dahan',1,20],['lichun',2,4],['yushui',2,19],['jingzhe',3,5],['chunfen',3,20],['qingming',4,4],['guyu',4,20],['lixia',5,5],['xiaoman',5,21],['mangzhong',6,5],['xiazhi',6,21],['xiaoshu',7,7],['dashu',7,22],['liqiu',8,7],['chushu',8,23],['bailu',9,7],['qiufen',9,23],['hanlu',10,8],['shuangjiang',10,23],['lidong',11,7],['xiaoxue',11,22],['daxue',12,7],['dongzhi',12,22]];const m=date.getMonth()+1,d=date.getDate();let cur='dongzhi';for(const[t,mm,dd]of terms)if(m>mm||m===mm&&d>=dd)cur=t;return cur}function applySeasonalBackground(){document.documentElement.style.setProperty('--seasonal-bg',`url("pic/background/${getSolarTermSlug()}.jpg")`);refreshPageBackgroundHeight()}function refreshPageBackgroundHeight(){requestAnimationFrame(()=>{const h=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,innerHeight);document.documentElement.style.setProperty('--page-bg-height',`${h}px`)})}
+async function ensureUserDocument(){if(!userDocRef||!currentUser)return;const snap=await getDoc(userDocRef);if(!snap.exists()){const d=createDefaultState();await setDoc(userDocRef,{user_id:currentUser.uid,...d,createdAt:serverTimestamp(),updatedAt:serverTimestamp()},{merge:true})}}function subscribeUserData(){if(!userDocRef)return;if(unsubscribeUserDoc)unsubscribeUserDoc();setSyncStatus('连接中','saving');unsubscribeUserDoc=onSnapshot(userDocRef,snap=>{state=normalizeState(snap.exists()?snap.data():{});render();setSyncStatus(snap.metadata.hasPendingWrites?'保存中':'已同步',snap.metadata.hasPendingWrites?'saving':'ok')},e=>{console.error(e);setSyncStatus('监听失败','error');showToast(`无法监听数据变化：${e.code||e.message||'未知错误'}`)})}
+function showApp(user){currentUser=user;userDocRef=doc(db,'users',user.uid);els.userEmailText.textContent=user.email||user.uid;document.body.classList.remove('is-auth');document.body.classList.add('is-app');els.authScreen.classList.add('is-hidden');els.appScreen.classList.remove('is-hidden');applySeasonalBackground();ensureUserDocument().catch(e=>{console.error(e);setSyncStatus('初始化失败','error');showToast(`初始化失败：${e.code||e.message||'未知错误'}`)}).finally(subscribeUserData);startResizeObserver()}function showAuth(){currentUser=null;userDocRef=null;state=createDefaultState();if(unsubscribeUserDoc)unsubscribeUserDoc();unsubscribeUserDoc=null;document.body.classList.remove('is-app');document.body.classList.add('is-auth');els.appScreen.classList.add('is-hidden');els.authScreen.classList.remove('is-hidden');setAuthStatus('');stopResizeObserver();refreshPageBackgroundHeight()}function startResizeObserver(){stopResizeObserver();if('ResizeObserver'in window){pageResizeObserver=new ResizeObserver(refreshPageBackgroundHeight);pageResizeObserver.observe(document.body)}addEventListener('resize',refreshPageBackgroundHeight)}function stopResizeObserver(){if(pageResizeObserver)pageResizeObserver.disconnect();pageResizeObserver=null;removeEventListener('resize',refreshPageBackgroundHeight)}
+function mapAuthError(e){const c=e?.code||'',m={'auth/invalid-email':'邮箱格式不正确。','auth/user-disabled':'该账号已被停用。','auth/user-not-found':'账号不存在，请先注册。','auth/wrong-password':'密码不正确。','auth/invalid-credential':'邮箱或密码不正确。','auth/email-already-in-use':'该邮箱已注册，请直接登录。','auth/weak-password':'密码强度不足，请至少使用 6 位。','auth/configuration-not-found':'Firebase Auth 尚未正确配置，请检查项目配置并启用 Email/Password。','auth/unauthorized-domain':'当前域名未加入 Firebase Authentication 授权域名。'};return m[c]||`操作失败：${c||e?.message||'未知错误'}`}
+function bindEvents(){els.modeButtons.forEach(btn=>btn.addEventListener('click',()=>{authMode=btn.dataset.authMode==='register'?'register':'login';els.modeButtons.forEach(x=>x.classList.toggle('is-active',x===btn));els.authHeading.textContent=authMode==='login'?'登录账号':'注册账号';els.authSubmit.textContent=authMode==='login'?'登录':'注册';els.passwordInput.autocomplete=authMode==='login'?'current-password':'new-password';setAuthStatus('')}));els.authForm.addEventListener('submit',async e=>{e.preventDefault();const email=els.emailInput.value.trim(),password=els.passwordInput.value;if(!email||!password)return;els.authSubmit.disabled=true;setAuthStatus(authMode==='login'?'正在登录...':'正在注册...');try{if(authMode==='login')await signInWithEmailAndPassword(auth,email,password);else await createUserWithEmailAndPassword(auth,email,password)}catch(err){console.error(err);setAuthStatus(mapAuthError(err),true)}finally{els.authSubmit.disabled=false}});els.logoutButton.addEventListener('click',()=>signOut(auth));document.querySelectorAll('[data-scroll-target]').forEach(btn=>btn.addEventListener('click',()=>document.getElementById(btn.dataset.scrollTarget)?.scrollIntoView({behavior:'smooth',block:'start'})));document.addEventListener('click',e=>{const action=e.target.closest('[data-action]');if(action){const card=action.closest('[data-scope][data-key]');if(card)handlePoolAction(card,action.dataset.action);return}const st=e.target.closest('[data-toggle-season]');if(st){const p=st.closest('.season-panel'),expanded=p.classList.toggle('is-collapsed')===false;st.setAttribute('aria-expanded',String(expanded));refreshPageBackgroundHeight();return}const rt=e.target.closest('[data-toggle-record-season]');if(rt){const g=rt.closest('.record-season'),expanded=g.classList.toggle('is-collapsed')===false;rt.setAttribute('aria-expanded',String(expanded));refreshPageBackgroundHeight();return}const del=e.target.closest('[data-delete-record]');if(del)deleteRecord(del.dataset.deleteRecord)});els.seasonFilter.addEventListener('change',applySeasonFilter);els.recordSeasonSelect.addEventListener('change',updateRecordPetOptions);els.recordForm.addEventListener('submit',addRecord);addEventListener('load',refreshPageBackgroundHeight)}
+buildStaticUI();bindEvents();applySeasonalBackground();onAuthStateChanged(auth,user=>user?showApp(user):showAuth());
+</script>
+</body>
+</html>
